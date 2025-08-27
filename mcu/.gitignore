@@ -1,6 +1,0 @@
-### Segger Embedded Studio ###
-#Template for Segger Projects
-**/Output/
-**/Debug/
-*.emSession
-*.jlink

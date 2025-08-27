@@ -1,0 +1,10 @@
+---
+title: "Resouces"
+description: "Welcome to my Quarto portfolio"
+author: "Abraham Rock"
+date: "08/27/25"
+categories:
+  - reflection
+  - labreport
+draft: false
+---

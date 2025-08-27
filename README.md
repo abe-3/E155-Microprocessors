@@ -1,3 +1,3 @@
-# E155 Lab 1
+# E155 Root
 
-This repository includes code to verify the proper assembly of the E155 development board and operation of the MCU and FPGA.
+This repository includes code and a timeline of my work through E155, Microprocessors.

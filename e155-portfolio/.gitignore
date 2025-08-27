@@ -1,0 +1,13 @@
+# Ignore Files in .quarto directory
+.quarto/
+
+# Ignore Files in _site directory
+_site/
+
+
+
+# Ignore Mac Files
+.DS_Store
+Thumbs.db
+
+/.quarto/
