@@ -1,0 +1,27 @@
+---
+title: "E155 Labs"
+listing:
+  contents: labs
+  type: default
+---
+
+## [Lab 1: FPGA and MCU Setup and Testing](lab1/lab1.qmd)
+Set-up FPGA and MCU protoboard. Wrote behavioral verilog to blink on-board LEDS and control a 7-Segment Display from combinational logic.
+
+## [Lab 2: Multiplexed 7-Segment Display](lab2/lab2.qmd)
+TO-DO
+
+## [Lab 3: Keypad Scanner](lab3/lab3.qmd)
+TO-DO
+
+## [Lab 4: Digital Audio](lab4/lab4.qmd)
+TO-DO
+
+## [Lab 5: Interrupts](lab5/lab5.qmd)
+TO-DO
+
+## [Lab 6: The Internet of Things and Serial Peripheral Interface Learning](lab6/lab6.qmd)
+TO-DO
+
+## [Lab 7: The Advanced Encryption Standard](lab7/lab7.qmd)
+TO-DO

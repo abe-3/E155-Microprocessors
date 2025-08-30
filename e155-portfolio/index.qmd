@@ -13,6 +13,4 @@ about:
 ---
 
 Abraham Rock is a Engineering student at [Harvey Mudd College](https://hmc.edu) in the Class of 2027.
-His interests lie in digital electronics, embedded systems, and systems engineering.
-He is in the ASHMC Executive Board where he acts as this year's Muddlife Director. 
-When he is not in the classroom, next to the optics table, or spending time with his family, you can find him behind the keyboard typing his latest manifesto on technology, education, and human flourishing for his weekly Substack newsletter, *The Absent-Minded Professor*, which you can find at [joshbrake.substack.com](https://joshbrake.substack.com).
+His interests lie in digital electronics, embedded systems, and systems engineering. He is in the ASHMC Executive Board where he acts as this year's Muddlife Director. In his free times, you can find him in the Makerspace, modeling something to 3D print or finding the right classNames for MAKE.
