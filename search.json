@@ -4,7 +4,7 @@
     "href": "blog.html",
     "title": "E155 Blog",
     "section": "",
-    "text": "Hello Quarto\n\n\nWelcome to my Quarto portfolio\n\n\n\n\n\nAug 27, 2025\n\n\nAbraham Rock\n\n\n\n\n\nNo matching items"
+    "text": "Week 1 Reflections\n\n\nBuilt and tested development board for E155.\n\n\n\n\n\nAug 29, 2025\n\n\nAbraham Rock\n\n\n\n\n\n\n\n\n\n\n\n\nHello Quarto\n\n\nWelcome to my Quarto portfolio\n\n\n\n\n\nAug 27, 2025\n\n\nAbraham Rock\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -14,16 +14,58 @@
     "text": "Abraham Rock is a Engineering student at Harvey Mudd College in the Class of 2027. His interests lie in digital electronics, embedded systems, and systems engineering. He is in the ASHMC Executive Board where he acts as this year’s Muddlife Director. In his free times, you can find him in the Makerspace, modeling something to 3D print or finding the right classNames for MAKE."
   },
   {
-    "objectID": "labs/lab4/lab4.html",
-    "href": "labs/lab4/lab4.html",
-    "title": "Lab 4: Digital Audio",
+    "objectID": "posts/week1-reflections.html",
+    "href": "posts/week1-reflections.html",
+    "title": "Week 1 Reflections",
+    "section": "",
+    "text": "Soldered development board together and practice Lattice Radiant and Segger compilation on the FPGA and MCU respectively."
+  },
+  {
+    "objectID": "posts/week1-reflections.html#summary",
+    "href": "posts/week1-reflections.html#summary",
+    "title": "Week 1 Reflections",
+    "section": "",
+    "text": "Soldered development board together and practice Lattice Radiant and Segger compilation on the FPGA and MCU respectively."
+  },
+  {
+    "objectID": "posts/week1-reflections.html#reflections-on-lab",
+    "href": "posts/week1-reflections.html#reflections-on-lab",
+    "title": "Week 1 Reflections",
+    "section": "Reflections on Lab",
+    "text": "Reflections on Lab\nI’m excited to improve my Verilog skills and getting more familiar with the idomatic style of the language and how these skills are already helping me with clinic. Struggled with learning all the software and fixing connection issues and other miscellanous warnings / errors I had run into but should help me with this class throughout the semester."
+  },
+  {
+    "objectID": "labs/lab3/lab3.html",
+    "href": "labs/lab3/lab3.html",
+    "title": "Lab 3: Keypad Scanner",
     "section": "",
     "text": "Overview\nTO-DO"
   },
   {
-    "objectID": "labs/lab2/lab2.html",
-    "href": "labs/lab2/lab2.html",
-    "title": "Lab 2: Multiplexed 7-Segment Display",
+    "objectID": "labs/lab5/lab5.html",
+    "href": "labs/lab5/lab5.html",
+    "title": "Lab 5: Interrupts",
+    "section": "",
+    "text": "Overview\nTO-DO"
+  },
+  {
+    "objectID": "labs/lab7/lab7.html",
+    "href": "labs/lab7/lab7.html",
+    "title": "Lab 7: The Advanced Encryption Standard",
+    "section": "",
+    "text": "Overview\nTO-DO"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html",
+    "href": "labs/lab1/lab1.html",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "",
+    "text": "Overview\nAssembled and tested development board.\n\n\nHardware Setup\n\n\n\n\nMCU and FPGA Development Board\n\n\n\n\n\nBoard Backside View\n\n\n\n\n\nRibbon Extender Connection"
+  },
+  {
+    "objectID": "labs/lab6/lab6.html",
+    "href": "labs/lab6/lab6.html",
+    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface Learning",
     "section": "",
     "text": "Overview\nTO-DO"
   },
@@ -84,37 +126,16 @@
     "text": "Lab 7: The Advanced Encryption Standard\nTO-DO"
   },
   {
-    "objectID": "labs/lab6/lab6.html",
-    "href": "labs/lab6/lab6.html",
-    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface Learning",
+    "objectID": "labs/lab2/lab2.html",
+    "href": "labs/lab2/lab2.html",
+    "title": "Lab 2: Multiplexed 7-Segment Display",
     "section": "",
     "text": "Overview\nTO-DO"
   },
   {
-    "objectID": "labs/lab1/lab1.html",
-    "href": "labs/lab1/lab1.html",
-    "title": "Lab 1: FPGA and MCU Setup and Testing",
-    "section": "",
-    "text": "Overview\nAssembled and tested development board.\n\n\nHardware Setup\n\n\n\n\nMCU and FPGA Development Board\n\n\n\n\n\nBoard Backside View\n\n\n\n\n\nRibbon Extender Connection"
-  },
-  {
-    "objectID": "labs/lab7/lab7.html",
-    "href": "labs/lab7/lab7.html",
-    "title": "Lab 7: The Advanced Encryption Standard",
-    "section": "",
-    "text": "Overview\nTO-DO"
-  },
-  {
-    "objectID": "labs/lab5/lab5.html",
-    "href": "labs/lab5/lab5.html",
-    "title": "Lab 5: Interrupts",
-    "section": "",
-    "text": "Overview\nTO-DO"
-  },
-  {
-    "objectID": "labs/lab3/lab3.html",
-    "href": "labs/lab3/lab3.html",
-    "title": "Lab 3: Keypad Scanner",
+    "objectID": "labs/lab4/lab4.html",
+    "href": "labs/lab4/lab4.html",
+    "title": "Lab 4: Digital Audio",
     "section": "",
     "text": "Overview\nTO-DO"
   }
