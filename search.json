@@ -1,0 +1,121 @@
+[
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "E155 Blog",
+    "section": "",
+    "text": "Hello Quarto\n\n\nWelcome to my Quarto portfolio\n\n\n\n\n\nAug 27, 2025\n\n\nAbraham Rock\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "E155 Portfolio",
+    "section": "",
+    "text": "Abraham Rock is a Engineering student at Harvey Mudd College in the Class of 2027. His interests lie in digital electronics, embedded systems, and systems engineering. He is in the ASHMC Executive Board where he acts as this year’s Muddlife Director. In his free times, you can find him in the Makerspace, modeling something to 3D print or finding the right classNames for MAKE."
+  },
+  {
+    "objectID": "labs/lab4/lab4.html",
+    "href": "labs/lab4/lab4.html",
+    "title": "Lab 4: Digital Audio",
+    "section": "",
+    "text": "Overview\nTO-DO"
+  },
+  {
+    "objectID": "labs/lab2/lab2.html",
+    "href": "labs/lab2/lab2.html",
+    "title": "Lab 2: Multiplexed 7-Segment Display",
+    "section": "",
+    "text": "Overview\nTO-DO"
+  },
+  {
+    "objectID": "labs/labs.html",
+    "href": "labs/labs.html",
+    "title": "E155 Labs",
+    "section": "",
+    "text": "Set-up FPGA and MCU protoboard. Wrote behavioral verilog to blink on-board LEDS and control a 7-Segment Display from combinational logic."
+  },
+  {
+    "objectID": "labs/labs.html#lab-1-fpga-and-mcu-setup-and-testing",
+    "href": "labs/labs.html#lab-1-fpga-and-mcu-setup-and-testing",
+    "title": "E155 Labs",
+    "section": "",
+    "text": "Set-up FPGA and MCU protoboard. Wrote behavioral verilog to blink on-board LEDS and control a 7-Segment Display from combinational logic."
+  },
+  {
+    "objectID": "labs/labs.html#lab-2-multiplexed-7-segment-display",
+    "href": "labs/labs.html#lab-2-multiplexed-7-segment-display",
+    "title": "E155 Labs",
+    "section": "Lab 2: Multiplexed 7-Segment Display",
+    "text": "Lab 2: Multiplexed 7-Segment Display\nTO-DO"
+  },
+  {
+    "objectID": "labs/labs.html#lab-3-keypad-scanner",
+    "href": "labs/labs.html#lab-3-keypad-scanner",
+    "title": "E155 Labs",
+    "section": "Lab 3: Keypad Scanner",
+    "text": "Lab 3: Keypad Scanner\nTO-DO"
+  },
+  {
+    "objectID": "labs/labs.html#lab-4-digital-audio",
+    "href": "labs/labs.html#lab-4-digital-audio",
+    "title": "E155 Labs",
+    "section": "Lab 4: Digital Audio",
+    "text": "Lab 4: Digital Audio\nTO-DO"
+  },
+  {
+    "objectID": "labs/labs.html#lab-5-interrupts",
+    "href": "labs/labs.html#lab-5-interrupts",
+    "title": "E155 Labs",
+    "section": "Lab 5: Interrupts",
+    "text": "Lab 5: Interrupts\nTO-DO"
+  },
+  {
+    "objectID": "labs/labs.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-learning",
+    "href": "labs/labs.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-learning",
+    "title": "E155 Labs",
+    "section": "Lab 6: The Internet of Things and Serial Peripheral Interface Learning",
+    "text": "Lab 6: The Internet of Things and Serial Peripheral Interface Learning\nTO-DO"
+  },
+  {
+    "objectID": "labs/labs.html#lab-7-the-advanced-encryption-standard",
+    "href": "labs/labs.html#lab-7-the-advanced-encryption-standard",
+    "title": "E155 Labs",
+    "section": "Lab 7: The Advanced Encryption Standard",
+    "text": "Lab 7: The Advanced Encryption Standard\nTO-DO"
+  },
+  {
+    "objectID": "labs/lab6/lab6.html",
+    "href": "labs/lab6/lab6.html",
+    "title": "Lab 6: The Internet of Things and Serial Peripheral Interface Learning",
+    "section": "",
+    "text": "Overview\nTO-DO"
+  },
+  {
+    "objectID": "labs/lab1/lab1.html",
+    "href": "labs/lab1/lab1.html",
+    "title": "Lab 1: FPGA and MCU Setup and Testing",
+    "section": "",
+    "text": "Overview\nAssembled and tested development board.\n\n\nHardware Setup\n\n\n\n\nMCU and FPGA Development Board\n\n\n\n\n\nBoard Backside View\n\n\n\n\n\nRibbon Extender Connection"
+  },
+  {
+    "objectID": "labs/lab7/lab7.html",
+    "href": "labs/lab7/lab7.html",
+    "title": "Lab 7: The Advanced Encryption Standard",
+    "section": "",
+    "text": "Overview\nTO-DO"
+  },
+  {
+    "objectID": "labs/lab5/lab5.html",
+    "href": "labs/lab5/lab5.html",
+    "title": "Lab 5: Interrupts",
+    "section": "",
+    "text": "Overview\nTO-DO"
+  },
+  {
+    "objectID": "labs/lab3/lab3.html",
+    "href": "labs/lab3/lab3.html",
+    "title": "Lab 3: Keypad Scanner",
+    "section": "",
+    "text": "Overview\nTO-DO"
+  }
+]
