@@ -1,6 +1,7 @@
 // Abraham Rock
 // arock@hmc.edu
 // August 31, 2025
+// Module to control combination logic for 7 Segment Display Output
 
 module seven_seg_ar(input logic [3:0] s,
 	output logic [6:0] seg);
