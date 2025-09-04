@@ -82,6 +82,10 @@ I created a testbench for each of the modules I made. The testbenches loads test
 The top level module ran 16 tests with 0 errors !
 
 ### Hardware Testing
+<figure style="flex:1 1 30%; text-align:center;">
+    <img src="images/oscope_trace.png" alt="Development Board" style="width:100%; border-radius:8px;">
+    <figcaption>Oscilloscope Trace of led[2] pin 42</figcaption>
+</figure>
 
 <div>
   <iframe width="560" height="315" src="https://www.youtube.com/embed/2ZfLwi56RN4?si=aefwQIISH2KaNn-i&amp;start=2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
