@@ -16,6 +16,7 @@ module leds_ar(input logic clk, reset,
 			led[2] <= 0;
 			counter <= 0;
 		end else begin
+			// given a 24 MHz Clock we divide by 5 million to get a period in 2.4 Hz
 			if(counter == 25'd5000000) begin
 				led[2] <= ~led[2]; 
 				counter <= 0;
