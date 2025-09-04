@@ -7,7 +7,7 @@ module testbench_lab1_ar();
 	logic [6:0] seg, seg_expected;
 	
 	logic [31:0] vectornum, errors;
-	logic [3:0] testvectors[10000:0];
+	logic [15:0] testvectors[10000:0];
 	
 	lab1_ar dut(reset, s, led, seg);
 	
