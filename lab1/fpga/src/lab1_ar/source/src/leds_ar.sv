@@ -2,6 +2,8 @@
 // arock@hmc.edu
 // August 31, 2025
 
+// Module to control blinking and combination logic for onboard LEDs
+
 module leds_ar(input logic clk, reset,
 	input logic [3:0] s,
 	output logic [2:0] led);
