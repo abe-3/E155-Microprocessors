@@ -1,5 +1,5 @@
 ---
-title: "Resouces"
+title: "Resources"
 description: "Welcome to my Quarto portfolio"
 author: "Abraham Rock"
 date: "08/27/25"
@@ -8,3 +8,5 @@ categories:
   - labreport
 draft: false
 ---
+
+## [HMC E155](https://hmc-e155.github.io/)

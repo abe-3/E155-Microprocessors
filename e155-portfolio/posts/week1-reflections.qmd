@@ -1,0 +1,16 @@
+---
+title: "Week 1 Reflections"
+description: "Built and tested development board for E155."
+author: "Abraham Rock"
+date: "08/29/25"
+categories:
+  - reflection
+  - labreport
+draft: false
+---
+
+## Summary
+Soldered development board together and practice Lattice Radiant and Segger compilation on the FPGA and MCU respectively.
+
+## Reflections on Lab
+I'm excited to improve my Verilog skills and getting more familiar with the idomatic style of the language and how these skills are already helping me with clinic. Struggled with learning all the software and fixing connection issues and other miscellanous warnings / errors I had run into but should help me with this class throughout the semester.

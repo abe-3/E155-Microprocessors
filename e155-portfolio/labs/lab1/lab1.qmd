@@ -1,3 +1,26 @@
-![](images/board.png)
-![](images/ribbonExtender.png)
-![](images/back.png)
+---
+title: "Lab 1: FPGA and MCU Setup and Testing"
+format: html
+---
+
+### Overview
+Assembled and tested development board.
+
+### Hardware Setup
+
+<div style="display:flex; gap:1rem; flex-wrap:wrap;">
+  <figure style="flex:1 1 30%; text-align:center;">
+    <img src="images/board.png" alt="Development Board" style="width:100%; border-radius:8px;">
+    <figcaption>MCU and FPGA Development Board</figcaption>
+  </figure>
+
+  <figure style="flex:1 1 30%; text-align:center;">
+    <img src="images/back.png" alt="Board Backside" style="width:100%; border-radius:8px;">
+    <figcaption>Board Backside View</figcaption>
+  </figure>
+
+  <figure style="flex:1 1 30%; text-align:center;">
+    <img src="images/ribbonExtender.png" alt="Ribbon Extender" style="width:100%; border-radius:8px;">
+    <figcaption>Ribbon Extender Connection</figcaption>
+  </figure>
+</div>
