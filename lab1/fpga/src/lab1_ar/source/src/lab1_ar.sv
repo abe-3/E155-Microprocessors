@@ -12,7 +12,8 @@ module lab1_ar(input logic reset,
 	// Internal high-speed oscillator
 	HSOSC #(.CLKHF_DIV(2'b01)) 
 		hf_osc (.CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(int_osc));
-	
+
+	// Instantiate Lower Level Modules
 	leds_ar blinkModule(int_osc, reset, s, led);
 	seven_seg_ar sevenModule(s, seg);
 	
