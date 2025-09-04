@@ -2,6 +2,8 @@
 // arock@hmc.edu
 // August 27, 2025
 
+// Top level module to control LED and 7SD Modules
+
 module lab1_ar(input logic reset,
 	input logic [3:0] s,
 	output logic [2:0] led, 
