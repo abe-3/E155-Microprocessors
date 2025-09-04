@@ -6,7 +6,9 @@ listing:
 ---
 
 ## [Lab 1: FPGA and MCU Setup and Testing](lab1/lab1.qmd)
-Set-up FPGA and MCU protoboard. Wrote behavioral verilog to blink on-board LEDS and control a 7-Segment Display from combinational logic.
+In this lab, the microcontroller and FPGA development board we will use for the continuation of this semester of E155 was soldered and assembled. We verified it was working correctly by uploading some demo code to make an onboard LED blink at $1$ Hz.
+
+The rest of the lab consisted of making some combinational logic to turn on onboard LEDs in addition to making another onboard LED blink at $2.4$ Hz and more combinational logic to display a digit in a 7-Segment-Display depending on the binary input.
 
 ## [Lab 2: Multiplexed 7-Segment Display](lab2/lab2.qmd)
 TO-DO
