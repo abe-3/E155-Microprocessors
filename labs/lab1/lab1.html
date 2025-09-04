@@ -68,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -123,6 +152,13 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#hardware-setup" id="toc-hardware-setup" class="nav-link" data-scroll-target="#hardware-setup">Hardware Setup</a></li>
+  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations">Calculations</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  <li><a href="#simulations" id="toc-simulations" class="nav-link" data-scroll-target="#simulations">Simulations</a></li>
+  <li><a href="#hardware-testing" id="toc-hardware-testing" class="nav-link" data-scroll-target="#hardware-testing">Hardware Testing</a></li>
+  <li><a href="#ai-prototype" id="toc-ai-prototype" class="nav-link" data-scroll-target="#ai-prototype">AI Prototype</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
   </ul>
 </nav>
     </div>
@@ -148,13 +184,49 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="hours-spent-on-lab-12-hours" class="level4">
+<h4 class="anchored" data-anchor-id="hours-spent-on-lab-12-hours">Hours spent on lab: 12 Hours</h4>
+</section>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
-<p>Assembled and tested development board.</p>
+<p>In this lab, the microcontroller and FPGA development board we will use for the continuation of this semester of E155 was soldered and assembled. We verified it was working correctly by uploading some demo code to make an onboard LED blink at <span class="math inline">\(1\)</span> Hz.</p>
+<p>The rest of the lab consisted of making some combinational logic to turn on onboard LEDs in addition to making another onboard LED blink at <span class="math inline">\(2.4\)</span> Hz and more combinational logic to display a digit in a 7-Segment-Display depending on the binary input. This is shown below.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Input</th>
+<th>Output</th>
+<th>Logic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>S[0:1]</td>
+<td>Onboard Led 0</td>
+<td>XOR</td>
+</tr>
+<tr class="even">
+<td>S[2:3]</td>
+<td>Onboard Led 1</td>
+<td>AND</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(48\)</span> Mhz Oscillator</td>
+<td>Onboard Led 2</td>
+<td>2.4 Hz Blinking</td>
+</tr>
+<tr class="even">
+<td>S[0:6]</td>
+<td>7 Segment Display</td>
+<td>Binary Decoder</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="hardware-setup" class="level3">
 <h3 class="anchored" data-anchor-id="hardware-setup">Hardware Setup</h3>
-<div style="display:flex; gap:1rem; flex-wrap:wrap;">
+<p>I followed the <a href="https://hmc-e155.github.io/lab/lab1/">Lab 1</a> guide for assembling and soldering my development board in addition to the <a href="https://hmc-e155.github.io/assets/doc/E155_v4_Dev_Board_BOM.html">interactive site</a>.</p>
+<div style="display:flex; gap:1rem; flex-wrap:wrap; border;">
 <figure style="flex:1 1 30%; text-align:center;" class="figure">
 <img src="images/board.png" alt="Development Board" style="width:100%; border-radius:8px;" class="figure-img">
 <figcaption>
@@ -174,6 +246,75 @@ Ribbon Extender Connection
 </figcaption>
 </figure>
 </div>
+</section>
+<section id="calculations" class="level3">
+<h3 class="anchored" data-anchor-id="calculations">Calculations</h3>
+<p>Assuming our 7 Segment Display LEDs have a drop of 2V and we want to restrict the current flow through the display to less than 20 milliamps. Using Ohm’s Law: <span class="math inline">\(V = IR\)</span> we can rearrange to solve for resistance: <span class="math inline">\(R = \frac{V}{I}\)</span>. Then plugging in our values: <span class="math inline">\(\frac{[3.3 V - 2 V] - 0 V}{20 \times 10^{\3} A} = 65 \Omega\)</span>. So I will use a resistor larger than <span class="math inline">\(65 \Omega\)</span>, the nearest size up stocked in the Engineering Stockroom being <span class="math inline">\(68 \Omega\)</span>, restricting the current through the display to <span class="math inline">\(19\)</span> mA of current.</p>
+</section>
+<section id="methods" class="level3">
+<h3 class="anchored" data-anchor-id="methods">Methods</h3>
+<p>I broke up the required tasks into different Verilog modules. In the following block diagram you can see each of my modules and how they fit together.</p>
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/blockDiagram.jpeg" alt="Block Diagram" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Block Diagram
+</figcaption>
+</figure>
+<p>The modules can be found <a href="https://github.com/abe-3/E155-Microprocessors/tree/main/lab1/fpga/src/lab1_ar/source/src">here</a> in my github.</p>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+The schematic for the circuit includes the FPGA, DIP switches, LEDs, and 7-segment display.
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/schem.jpeg" alt="Schematic" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Schematic
+</figcaption>
+</figure>
+</section>
+<section id="simulations" class="level3">
+<h3 class="anchored" data-anchor-id="simulations">Simulations</h3>
+<p>I created a testbench for each of the modules I made. The testbenches loads testvectors that simulate all of the combinational logic of switches and LED and 7 Segment Display outputs against each other to make sure the outputs are what I expect when the module is run. You can see below my waveforms generated from my 3 simulations</p>
+<div style="display:flex; flex-direction:column; gap:16px;">
+<figure style="width:100%; text-align:center;" class="figure">
+<img src="images/waves_lab.png" alt="Top Level Module" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Top Level Module
+</figcaption>
+</figure>
+<div style="display:flex; gap:16px;">
+<figure style="flex:1; text-align:center;" class="figure">
+<img src="images/waves_leds.png" alt="LED Module" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+LED Module
+</figcaption>
+</figure>
+<figure style="flex:1; text-align:center;" class="figure">
+<img src="images/waves_seg.png" alt="7 Segment Display Module" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+7 Segment Display Module
+</figcaption>
+</figure>
+</div>
+</div>
+<p>The top level module ran 16 tests with 0 errors !</p>
+</section>
+<section id="hardware-testing" class="level3">
+<h3 class="anchored" data-anchor-id="hardware-testing">Hardware Testing</h3>
+<div>
+<p><iframe width="560" height="315" src="https://www.youtube.com/embed/2ZfLwi56RN4?si=aefwQIISH2KaNn-i&amp;start=2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe></p>
+</div>
+</section>
+<section id="ai-prototype" class="level3">
+<h3 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h3>
+<p>I used Gemini’s 2.5-Pro model for this section of the assignment.</p>
+<p>I prompted the AI with: “Write SystemVerilog HDL to leverage the internal high speed oscillator in the Lattice UP5K FPGA and blink an LED at 2 Hz. Take full advantage of SystemVerilog syntax, for example, using logic instead of wire and reg.”.</p>
+<p>Compiling the given code resulted in 1 error and 12 warnings: Error 35901063 Synthesis ERROR &lt;35901063&gt; - c:/users/abrah/onedrive/documents/lab1_ai/source/impl_1/lab1_ai.sv(21): instantiating unknown module SB_HFOSC. VERI-1063 [lab1_ai.sv:21]</p>
+<p>It simply suggested I didn’t have the module installed but it was trying to access a oscillator not compatible with our board. I fixed the oscillator declaration for it then it compiled fine.</p>
+</section>
+<section id="results" class="level3">
+<h3 class="anchored" data-anchor-id="results">Results</h3>
+<p>All lab requirements were met. The E155 development board is fully assembled and operational, except for a broken ribbon cable connector that needs replacement. The FPGA is programmed with synthesized Verilog, successfully driving the LEDs and 7-segment display as specified. Both simulation and hardware tests confirm correct operation, with the 7-segment display showing all digits clearly and equally bright.</p>
 
 
 </section>
