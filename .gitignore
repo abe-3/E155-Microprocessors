@@ -1,3 +1,24 @@
 # Ignore Mac Files
 .DS_Store
 Thumbs.db
+
+### Lattice Radiant files ###
+#Template for Radiant projects
+*.html
+impl*/
+*.xml
+.build_status
+.run_manager.ini
+.recovery
+.spread_sheet.ini
+.spreadsheet_view.ini
+*.dir/
+*.log
+*.tcl
+*.ccl
+*.srp
+*.dmp
+._Real_._Math_.vhd
+Thumbs.db
+DS_Store
+simulations*/
