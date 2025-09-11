@@ -1,0 +1,447 @@
+# Reading pref.tcl
+# //  Questa Lattice OEM Edition-64
+# //  Version 2024.2 win64 May 20 2024
+# //
+# // Unpublished work. Copyright 2024 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading project lab2_ar
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+vsim -gui work.testbench_lab2_ar -voptargs=+acc -L iCE40UP
+# vsim -gui work.testbench_lab2_ar -voptargs="+acc" -L iCE40UP 
+# Start time: 00:42:33 on Sep 08,2025
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Error: C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(13): (vopt-2135) Too many port connections. Expected 7, found 8.
+# Optimization failed
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=1, Warnings=1.
+# Error loading design
+# End time: 00:42:35 on Sep 08,2025, Elapsed time: 0:00:02
+# Errors: 1, Warnings: 6
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+vsim -gui -voptargs=+acc -L iCE40UP work.testbench_lab2_ar
+# vsim -gui -voptargs="+acc" -L iCE40UP work.testbench_lab2_ar 
+# Start time: 00:43:18 on Sep 08,2025
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Warning: (vopt-133) Unable to remove directory "C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/simulations/work/@_opt".
+# ** Error (suppressible): C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(27): (vopt-7061) Variable 'counter' driven in an always_ff block, may not be driven by any other process. See C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(22).
+# ** Error (suppressible): C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(34): (vopt-7061) Variable 'errors' driven in an always_ff block, may not be driven by any other process. See C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(22).
+# ** Error (suppressible): C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(39): (vopt-7061) Variable 'errors' driven in an always_ff block, may not be driven by any other process. See C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(22).
+# ** Error (suppressible): C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(44): (vopt-7061) Variable 'errors' driven in an always_ff block, may not be driven by any other process. See C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(22).
+# Optimization failed
+# ** Error: (vopt-2064) Compiler back-end code generation process terminated with code 12.
+# ** Warning: (vopt-133) Unable to remove directory "C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/simulations/work/@_opt".
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=5, Warnings=3.
+# Error loading design
+# End time: 00:43:20 on Sep 08,2025, Elapsed time: 0:00:02
+# Errors: 5, Warnings: 5
+vsim -gui -voptargs=+acc -L iCE40UP work.testbench_lab2_ar
+# vsim -gui -voptargs="+acc" -L iCE40UP work.testbench_lab2_ar 
+# Start time: 00:45:20 on Sep 08,2025
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Warning: (vopt-133) Unable to remove directory "C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/simulations/work/@_opt".
+# ** Error (suppressible): C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(27): (vopt-7061) Variable 'counter' driven in an always_ff block, may not be driven by any other process. See C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(22).
+# ** Error (suppressible): C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(34): (vopt-7061) Variable 'errors' driven in an always_ff block, may not be driven by any other process. See C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(22).
+# ** Error (suppressible): C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(39): (vopt-7061) Variable 'errors' driven in an always_ff block, may not be driven by any other process. See C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(22).
+# ** Error (suppressible): C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(44): (vopt-7061) Variable 'errors' driven in an always_ff block, may not be driven by any other process. See C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(22).
+# Optimization failed
+# ** Error: (vopt-2064) Compiler back-end code generation process terminated with code 12.
+# ** Warning: (vopt-133) Unable to remove directory "C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/simulations/work/@_opt".
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=5, Warnings=3.
+# Error loading design
+# End time: 00:45:22 on Sep 08,2025, Elapsed time: 0:00:02
+# Errors: 5, Warnings: 4
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+vsim -gui -voptargs=+acc -L iCE40UP work.testbench_lab2_ar
+# vsim -gui -voptargs="+acc" -L iCE40UP work.testbench_lab2_ar 
+# Start time: 00:45:40 on Sep 08,2025
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Warning: (vopt-133) Unable to remove directory "C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/simulations/work/@_opt".
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=2.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+add wave  \
+sim:/testbench_lab2_ar/clk \
+sim:/testbench_lab2_ar/reset \
+sim:/testbench_lab2_ar/s_1 \
+sim:/testbench_lab2_ar/s_2 \
+sim:/testbench_lab2_ar/seg_1 \
+sim:/testbench_lab2_ar/seg_2 \
+sim:/testbench_lab2_ar/display_select \
+sim:/testbench_lab2_ar/sum
+run 500000
+run 5000000
+run 500000000
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=2.
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 2545 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 2545 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 2545 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 5 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 5 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 5 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 5 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 2545 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+run 99999999
+run 999999999
+run 9999999999
+run 5000 ns
+run 50000000 ns
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 5000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 2565 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+run 5000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 2575 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+run 500000000
+run 5000000000
+run 50000000000
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 2545 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
+# Compile of digit_sum_ar.sv was successful.
+# Compile of display_mux_ar.sv was successful.
+# Compile of lab2_ar.sv was successful.
+# Compile of seven_seg_ar.sv was successful.
+# Compile of testbench_lab2_ar.sv was successful.
+# 5 compiles, 0 failed with no errors.
+restart -f
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility. The +acc switch would be deprecated in a future release.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# Loading sv_std.std
+# Loading work.testbench_lab2_ar(fast)
+# Loading work.lab2_ar(fast)
+# Loading iCE40UP.HSOSC(fast)
+# Loading work.display_mux_ar(fast)
+# Loading work.seven_seg_ar(fast)
+# Loading work.digit_sum_ar(fast)
+run 50000000
+# All tests completed with          0 errors
+# ** Note: $stop    : C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv(54)
+#    Time: 2545 ns  Iteration: 1  Instance: /testbench_lab2_ar
+# Break in Module testbench_lab2_ar at C:/Users/abrah/OneDrive/Documents/E155-Microprocessors/lab2/fpga/source/HDL/testbench_lab2_ar.sv line 54
