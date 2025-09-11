@@ -7,8 +7,8 @@
 module seven_seg_ar(input logic [3:0] s_1, s_2,
 	output logic [6:0] seg_1, seg_2);
 
-	seg_1 = seg_decoder(s_1);
-	seg_2 = seg_decoder(s_2);
+	assign seg_1 = seg_decoder(s_1);
+	assign seg_2 = seg_decoder(s_2);
 
 		function automatic logic [6:0] seg_decoder(input logic[3:0] sw);
 		case(sw)
