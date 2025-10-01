@@ -24,8 +24,7 @@ module lab2_ar(
 	display_mux_ar mux_controller(int_osc, ~reset, display_select, not_display_select);
 	
 	// Control combinatonal logic of 7-Segment-Displays 
-	seven_seg_ar sevenModuleOne(~s_1, decoded_seg1);
-	seven_seg_ar sevenModuleTwo(~s_2, decoded_seg2);
+	seven_seg_ar sevenModule(~s_1, ~s_2, decoded_seg1, decoded_seg2);
 	
 	// Makes sure if 1 display is on, other is off
 	always_comb begin
