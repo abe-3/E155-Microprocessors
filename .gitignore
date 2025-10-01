@@ -6,6 +6,7 @@ Thumbs.db
 #Template for Radiant projects
 *.html
 impl*/
+HDL*/
 *.xml
 .build_status
 .run_manager.ini
@@ -18,6 +19,8 @@ impl*/
 *.ccl
 *.srp
 *.dmp
+*.sty
+*.pfl
 ._Real_._Math_.vhd
 Thumbs.db
 DS_Store
