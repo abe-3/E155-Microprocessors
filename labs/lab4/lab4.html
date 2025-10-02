@@ -191,6 +191,16 @@ window.Quarto = {
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
 <p>In this lab, we shift away from Hardware Description Language and our FPGA. We begin to make some set-up files for our Microcontroller <a href="https://www.st.com/resource/en/datasheet/stm32l432kc.pdf">STM32L432KCUx</a> to access its internal clock, GPIO clocks, and Timer clocks to generate electrical pulses and delays in the form of square waves.</p>
+<div>
+<div style="flex">
+<iframe width="280" height="315" src="https://www.youtube.com/embed/wfF0zHeU3Zs?si=9lks0jjdINPhZiAC&amp;start=4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<iframe width="280" height="315" src="https://www.youtube.com/embed/L42sbnQxEmw?si=OMTgBznpEtFwNmGX&amp;start=5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pwttcgZwqZU?si=OnNjEZihagENiB-A" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</div>
 </section>
 <section id="hardware-setup" class="level3">
 <h3 class="anchored" data-anchor-id="hardware-setup">Hardware Setup</h3>
@@ -355,7 +365,7 @@ Where f_timer is typically 80 MHz, PSC is the prescaler value, and ARR is the au
 <strong>GPIO Connection:</strong> Configure pin alternate function per datasheet tables (e.g., PA0 = TIM2_CH1 with AF1)
 </p>
 </div>
-<p>I think it did a good job with this response. From my understanding of the reference manual, TIM2 is one of the more robust timers on our microcontroller and could definitely be used to produce a PWM signal.</p>
+<p>I think it did a good job with this response. From my understanding of the reference manual, TIM2 is one of the more robust timers on our microcontroller and could definetley be used to produce a PWM signal.</p>
 </section>
 <section id="conclusion" class="level3">
 <h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
