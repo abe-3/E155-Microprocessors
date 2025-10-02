@@ -92,6 +92,7 @@ void analogWrite(TIM16_TypeDef *TIMx, uint32_t freq, uint32_t duty_cycle_percent
   
   
 
+  // ARR = clk_freq / note_freq
   if (freq_difference <= (MAX_TIMER + 1.0)) {
     psc_val = 0; //maximum resolution
     arr_val = (uint32_t)round(freq_difference) - 1;
