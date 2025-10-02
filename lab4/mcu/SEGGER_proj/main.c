@@ -1,5 +1,3 @@
-
-
 /*********************************************************************
 *                    SEGGER Microcontroller GmbH                     *
 *                        The Embedded Experts                        *
@@ -200,6 +198,10 @@ const int un_sospiro[][2] = {
 *  Function description
 *  Play through Fur Elise and Un Sospiro via button press selection
 *  Generate frequency through PWM generation
+*
+* Abraham Rock
+* arock@hmc.edu
+* September 30, 2025
 */
 
 int main(void) {
