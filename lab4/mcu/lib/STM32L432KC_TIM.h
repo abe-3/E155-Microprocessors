@@ -1,5 +1,9 @@
+// Abraham Rock
+// arock@hmc.edu
+// September 30, 2025
+
 // STM32L432KC_TIM.h
-// Header for Timer functions
+// Header for Timer 15 and 16 functions
 
 #ifndef STM32L4_TIM_H
 #define STM32L4_TIM_H
