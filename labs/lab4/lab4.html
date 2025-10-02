@@ -68,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -122,6 +151,12 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#hardware-setup" id="toc-hardware-setup" class="nav-link" data-scroll-target="#hardware-setup">Hardware Setup</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations">Calculations</a></li>
+  <li><a href="#verification" id="toc-verification" class="nav-link" data-scroll-target="#verification">Verification</a></li>
+  <li><a href="#ai-prototype" id="toc-ai-prototype" class="nav-link" data-scroll-target="#ai-prototype">AI Prototype</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -147,9 +182,184 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="hours-spent-on-lab-9-hours" class="level4">
+<h4 class="anchored" data-anchor-id="hours-spent-on-lab-9-hours">Hours spent on lab: 9 Hours</h4>
+<section id="hours-procrastinated-einf-hours" class="level5">
+<h5 class="anchored" data-anchor-id="hours-procrastinated-einf-hours">Hours procrastinated: <span class="math inline">\(e^\inf\)</span> Hours</h5>
+</section>
+</section>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
-<p>TO-DO</p>
+<p>In this lab, we shift away from Hardware Description Language and our FPGA. We begin to make some set-up files for our Microcontroller <a href="https://www.st.com/resource/en/datasheet/stm32l432kc.pdf">STM32L432KCUx</a> to access its internal clock, GPIO clocks, and Timer clocks to generate electrical pulses and delays in the form of square waves.</p>
+</section>
+<section id="hardware-setup" class="level3">
+<h3 class="anchored" data-anchor-id="hardware-setup">Hardware Setup</h3>
+<p>I followed figure 9-5 on the <a href="https://www.ti.com/lit/ds/symlink/lm386.pdf">LM386 datasheet</a> using the audio amplifier. To create my breadboard:</p>
+<figure style="flex:1 1 40%; text-align:center;" class="figure">
+<img src="images/breadboard.png" alt="Breadboard" style="max-height:300px; width:auto; border-radius:8px; transform: rotate(90deg);" class="figure-img">
+<figcaption>
+Breadboard
+</figcaption>
+</figure>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+The schematic for the circuit includes the MCU, Piano switches, Push-Buttons, and the LM386 Audio Amplifier.
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/schematic.jpeg" alt="Schematic" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Schematic
+</figcaption>
+</figure>
+</section>
+<section id="calculations" class="level3">
+<h3 class="anchored" data-anchor-id="calculations">Calculations</h3>
+<section id="delay" class="level4">
+<h4 class="anchored" data-anchor-id="delay">Delay</h4>
+<p>Given the following formulas:</p>
+<ul>
+<li><span class="math inline">\(f_{timer}=\frac{f_{clk}}{PSC+1}\)</span></li>
+<li><span class="math inline">\(f_{reload}=\frac{f_{timer}}{ARR+1}\)</span></li>
+<li><span class="math inline">\(T=\frac{PSC+1}{f_{clk}}\times (ARR+1)\)</span></li>
+</ul>
+<p>Hardcoding PSC for delay as 2500, we can use our first equation <span class="math inline">\(f_{timer}=\frac{80 * 10^6 Hz}{2501} \approx 31987.2 Hz\)</span>. We can then use our 3rd equation to see our minimum and maximum delay depending on what <span class="math inline">\(ARR\)</span> is set as as the incrementer.</p>
+<p>Minimum (ARR = 1): <span class="math inline">\(T=\frac{2501}{80 * 10^6 Hz}\times (2) \approx 62.5 \mu s\)</span>.</p>
+<p>Maximum (ARR = 65635 = 0xFFFF): <span class="math inline">\(T=\frac{2501}{80 * 10^6 Hz}\times (65535) \approx 2.05 s\)</span>.</p>
+<hr>
+</section>
+<section id="pulse-width-modulation" class="level4">
+<h4 class="anchored" data-anchor-id="pulse-width-modulation">Pulse Width Modulation</h4>
+<p>Given the following formula:</p>
+<ul>
+<li><span class="math inline">\(f_{pwm}=\frac{f_{clk}}{(PSC+1)(ARR+1)}\)</span></li>
+</ul>
+<p>Minimum (largest PSC and ARR): <span class="math inline">\(f_{pwm}=\frac{80 * 10^6 Hz}{65535^2} \approx 18.627 mHz\)</span></p>
+<p>Maximum (smallest PSC and ARR): <span class="math inline">\(f_{pwm}=\frac{80 * 10^6 Hz}{2} = 40 MHz\)</span></p>
+<p>So let’s go through some examples to see how accurate our production is even with the rounding and integer division taking place.</p>
+<p><strong>78 Hz (Eb2):</strong></p>
+<p><span class="math inline">\(D = \frac{80*10^6}{78} \approx 1025641.03\)</span>.</p>
+<p>So my code would choose a PSC Value of <span class="math inline">\(\frac{1025641.03}{65536} - 1 \approx 15.65 - 1\)</span>.</p>
+<p>I use ceil to round numbers with a decimal of 0.5 or more to the next largest integer so we end up getting <span class="math inline">\(16 - 1 = 15\)</span>.</p>
+<p>It would then calculate a ARR Value of <span class="math inline">\(\frac{1025641.03}{15 + 1} \approx 64102.56\)</span>.</p>
+<p>I use round to bring down numbers with a decimal of less than 0.5 to the next smallest integer getting us <span class="math inline">\(64103\)</span>.</p>
+<p>Then calculating <span class="math inline">\(f_{clk} = \frac{80*10^6 Hz}{PSC * ARR} = \frac{80*10^6 Hz}{16 * 64103} \approx 77.995\)</span>.</p>
+<p>We have an error of <span class="math inline">\(\frac{77.995 - 78}{78} \approx -0.0064 \%\)</span>.</p>
+<p><strong>440 Hz (A4):</strong></p>
+<p><span class="math inline">\(D = \frac{80*10^6}{440} \approx 181818.\overline{18}\)</span>.</p>
+<p>So my code would choose a PSC Value of <span class="math inline">\(\frac{181818.\overline{18}}{65536} - 1 \approx 2.8 - 1\)</span>.</p>
+<p>I use ceil to round numbers with a decimal of 0.5 or more to the next largest integer so we end up getting <span class="math inline">\(3 - 1 = 2\)</span>.</p>
+<p>It would then calculate a ARR Value of <span class="math inline">\(\frac{181818.\overline{18}}{2 + 1} \approx 60606.06\)</span>.</p>
+<p>I use round to bring down numbers with a decimal of less than 0.5 to the next smallest integer getting us <span class="math inline">\(60606\)</span>.</p>
+<p>Then calculating <span class="math inline">\(f_{clk} = \frac{80*10^6 Hz}{PSC * ARR} = \frac{80*10^6 Hz}{181818} = 440.00044\)</span>.</p>
+<p>We have an error of <span class="math inline">\(\frac{440.00044 - 440}{440} = 0.0001 \%\)</span>.</p>
+<p><strong>1568 Hz (G6):</strong></p>
+<p><span class="math inline">\(D = \frac{80*10^6}{1568} \approx 51020.41\)</span>.</p>
+<p>So my code would choose a PSC Value of <span class="math inline">\(\frac{51020.41}{65536} - 1 \approx 0.77 - 1\)</span>.</p>
+<p>I use ceil to round numbers with a decimal of 0.5 or more to the next largest integer so we end up getting <span class="math inline">\(1 - 1 = 0\)</span>.</p>
+<p>It would then calculate a ARR Value of <span class="math inline">\(\frac{51020.41}{0 + 1} \approx 51020.41\)</span>.</p>
+<p>I use round to bring down numbers with a decimal of less than 0.5 to the next smallest integer getting us <span class="math inline">\(51020\)</span>.</p>
+<p>Then calculating <span class="math inline">\(f_{clk} = \frac{80*10^6 Hz}{PSC * ARR} = \frac{80*10^6 Hz}{51021} \approx 1567.97\)</span>.</p>
+<p>We have an error of <span class="math inline">\(\frac{1567.97 - 1568}{1568} \approx -0.0019 \%\)</span>.</p>
+</section>
+</section>
+<section id="verification" class="level3">
+<h3 class="anchored" data-anchor-id="verification">Verification</h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5em; margin-bottom: 2em;">
+<!-- 500 Hz -->
+<figure style="background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 1em; text-align: center;" class="figure">
+<img src="images/500Hz.png" alt="500 Hz Oscilloscope Trace" style="width: 100%; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.10); object-fit: contain;" class="figure-img">
+<figcaption style="margin-top: 0.8em; color: #333; font-weight: 600;">
+500 Hz Trace
+</figcaption>
+<p style="margin-top: 0.5em; color: #555; font-size: 0.95em; text-align: left;">
+Percent Error = <span class="math inline">\(\frac{497.22 - 500}{500} \approx 0.56 \%\)</span> <br>
+</p>
+</figure>
+<!-- 1000 Hz -->
+<figure style="background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 1em; text-align: center;" class="figure">
+<img src="images/1000Hz.png" alt="1000 Hz Oscilloscope Trace" style="width: 100%; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.10); object-fit: contain;" class="figure-img">
+<figcaption style="margin-top: 0.8em; color: #333; font-weight: 600;">
+1000 Hz Trace
+</figcaption>
+<p style="margin-top: 0.5em; color: #555; font-size: 0.95em; text-align: left;">
+Percent Error = <span class="math inline">\(\frac{994.1 - 1000}{1000} \approx 0.59 \%\)</span>
+</p>
+</figure>
+<!-- 5000 Hz -->
+<figure style="background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 1em; text-align: center;" class="figure">
+<img src="images/5000Hz.png" alt="5000 Hz Oscilloscope Trace" style="width: 100%; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.10); object-fit: contain;" class="figure-img">
+<figcaption style="margin-top: 0.8em; color: #333; font-weight: 600;">
+5000 Hz Trace
+</figcaption>
+<p style="margin-top: 0.5em; color: #555; font-size: 0.95em; text-align: left;">
+Percent Error = <span class="math inline">\(\frac{4973.7 - 5000}{5000} \approx 0.53 \%\)</span>
+</p>
+</figure>
+</div>
+</section>
+<section id="ai-prototype" class="level3">
+<h3 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h3>
+<p>This week I prompted Claude AI with “What timers should I use on the STM32L432KC to generate frequencies ranging from 220Hz to 1kHz? What’s the best choice of timer if I want to easily connect it to a GPIO pin? What formulae are relevant, and what registers need to be set to configure them properly?”. For additional context, I was able to upload the Datasheet and Reference Manual to the AI so it could potentially go through and not hallucinate registers.</p>
+<div class="ai-response">
+<h4 class="anchored">
+Claude AI Response Summary
+</h4>
+<p>
+<strong>Recommended Timer:</strong> TIM2 (32-bit general-purpose timer)
+</p>
+<ul>
+<li>
+Best for 220Hz-1kHz range due to 32-bit counter flexibility
+</li>
+<li>
+4 channels available for PWM output
+</li>
+<li>
+Easy GPIO mapping via alternate functions
+</li>
+</ul>
+<p>
+<strong>Key Formula:</strong>
+</p>
+<pre><code>f_output = f_timer / ((PSC + 1) × (ARR + 1))</code></pre>
+<p>
+Where f_timer is typically 80 MHz, PSC is the prescaler value, and ARR is the auto-reload value.
+</p>
+<p>
+<strong>Essential Registers:</strong>
+</p>
+<ul>
+<li>
+<code>TIMx_PSC</code> - Prescaler (divides clock)
+</li>
+<li>
+<code>TIMx_ARR</code> - Auto-reload register (defines period)
+</li>
+<li>
+<code>TIMx_CCRx</code> - Capture/compare (sets duty cycle)
+</li>
+<li>
+<code>TIMx_CCMR</code> - Set to PWM mode (OCxM = 110 or 111)
+</li>
+<li>
+<code>TIMx_CCER</code> - Enable channel output
+</li>
+<li>
+<code>TIMx_CR1</code> - Enable counter
+</li>
+</ul>
+<p>
+<strong>Example (440Hz):</strong> With 80 MHz clock, PSC=79, ARR=2272 gives 440.05 Hz
+</p>
+<p>
+<strong>GPIO Connection:</strong> Configure pin alternate function per datasheet tables (e.g., PA0 = TIM2_CH1 with AF1)
+</p>
+</div>
+<p>I think it did a good job with this response. From my understanding of the reference manual, TIM2 is one of the more robust timers on our microcontroller and could definitely be used to produce a PWM signal.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>The design worked as intended. You are able to trigger the given song: Fur Elise by the press of a button, and trigger my song of choice: Un Sospiro by clicking a switch.</p>
 
 
 </section>

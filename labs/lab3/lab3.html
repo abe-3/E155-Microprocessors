@@ -122,6 +122,10 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#hardware-setup" id="toc-hardware-setup" class="nav-link" data-scroll-target="#hardware-setup">Hardware Setup</a></li>
+  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations">Calculations</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
   </ul>
 </nav>
     </div>
@@ -147,9 +151,49 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="hours-spent-on-lab-45-hours" class="level4">
+<h4 class="anchored" data-anchor-id="hours-spent-on-lab-45-hours">Hours spent on lab: 45 Hours</h4>
+<section id="hours-procrastinated-hours" class="level5">
+<h5 class="anchored" data-anchor-id="hours-procrastinated-hours">Hours procrastinated: Hours :(</h5>
+</section>
+</section>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
-<p>TO-DO</p>
+<p>In this lab, expanding on our clock multiplexing knowledge from <a href="../lab2/lab2.html">Lab 2</a>, we controlled a two digit 7-segment-display via inputs of a keypad. This 4 x 4 keypad we use has 8 pins for each row and column connection. We display the most recent input on the right digit of the 7-segment-display. On subsequent inputs of the keypad, we should shift the value displayed from the right digit to the left digit of the 7-segment-display and simultaneously update the right digit with the new input of the keypad.</p>
+</section>
+<section id="hardware-setup" class="level3">
+<h3 class="anchored" data-anchor-id="hardware-setup">Hardware Setup</h3>
+<p>We have a very similar circuit as lab 2 where we used a PNP transistor to control which segment was powered to display two digits with limited pins avaliable. This is my breadboard:</p>
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/breadboard.png" alt="Lab 3 Circuit Breadboard" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Lab 3 Circuit Breadboard
+</figcaption>
+</figure>
+</section>
+<section id="calculations" class="level3">
+<h3 class="anchored" data-anchor-id="calculations">Calculations</h3>
+</section>
+<section id="methods" class="level3">
+<h3 class="anchored" data-anchor-id="methods">Methods</h3>
+<p>I broke up the required tasks into different Verilog modules. In the following block diagram you can see each of my modules and how they fit together.</p>
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/blockDiagram.jpeg" alt="Block Diagram" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Block Diagram
+</figcaption>
+</figure>
+<p>The modules can be found <a href="https://github.com/abe-3/E155-Microprocessors/tree/main/lab2/fpga/src/lab2_ar/source/src">here</a> in my github.</p>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+The schematic for the circuit includes the FPGA, Push Buttons, and the 7-segment display.
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/schematic.jpeg" alt="Schematic" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Schematic
+</figcaption>
+</figure>
 
 
 </section>
