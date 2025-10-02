@@ -1,3 +1,7 @@
+// Abraham Rock
+// arock@hmc.edu
+// September 30, 2025
+
 // STM32L432KC_TIM.c
 // Source code for Timer functions
 
