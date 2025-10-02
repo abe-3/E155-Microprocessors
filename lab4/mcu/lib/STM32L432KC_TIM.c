@@ -103,7 +103,7 @@ void analogWrite(TIM16_TypeDef *TIMx, uint32_t freq, uint32_t duty_cycle_percent
   } else {
     psc_val = (uint32_t)ceil(freq_difference / (MAX_TIMER + 1.0)) - 1;
 
-    // With the optimal PSC found, calculate the corresponding ARR value.
+    // after PSC calculated, find corresponding ARR value
     float arr_plus_1 = freq_difference / (psc_val + 1.0);
     arr_val = (uint32_t)round(arr_plus_1) - 1;
   }
