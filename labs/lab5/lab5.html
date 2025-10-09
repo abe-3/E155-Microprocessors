@@ -68,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -122,6 +151,11 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#hardware-setup" id="toc-hardware-setup" class="nav-link" data-scroll-target="#hardware-setup">Hardware Setup</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations">Calculations</a></li>
+  <li><a href="#ai-prototype" id="toc-ai-prototype" class="nav-link" data-scroll-target="#ai-prototype">AI Prototype</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -147,9 +181,178 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="hours-spent-on-lab-5-hours" class="level4">
+<h4 class="anchored" data-anchor-id="hours-spent-on-lab-5-hours">Hours spent on lab: 5 Hours</h4>
+</section>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
-<p>TO-DO</p>
+<p>In this lab, we learn about interrupts, a mechanism to do some action when you detect something. This method compared to polling saves on MCU’s CPU usage, letting the MCU rest or do other tasks and only do the desired action only when needed. We used motor <a href="https://hmc-e155.github.io/assets/lab/25GA370.pdf">25GA370</a> to read out the encoded and waves.</p>
+</section>
+<section id="hardware-setup" class="level3">
+<h3 class="anchored" data-anchor-id="hardware-setup">Hardware Setup</h3>
+<p>I followed the wiring diagram on the <a href="https://hmc-e155.github.io/assets/lab/25GA370.pdf">Motor 25GA370 Datasheet</a>. Then checked Table 13 and 14 on the <a href="https://www.st.com/resource/en/datasheet/stm32l432kc.pdf">STM32L432KCUx MCU Datasheet</a> to choose PB1 and PB7 as 5 Volt tolerant pins:</p>
+<figure style="flex:1 1 40%; text-align:center;" class="figure">
+<img src="images/breadboard.png" alt="Breadboard" style="max-height:300px; width:auto; border-radius:8px; transform: rotate(90deg);" class="figure-img">
+<figcaption>
+Breadboard
+</figcaption>
+</figure>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+The schematic for the circuit includes the MCU and the Motor.
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/schematic.jpeg" alt="Schematic" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Schematic
+</figcaption>
+</figure>
+Additionally, my flowchart drawing showing the interrupts is here including two separate EXTI registers on the MCU.
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/flowchart.jpeg" alt="Flowchart" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Flowchart
+</figcaption>
+</figure>
+</section>
+<section id="calculations" class="level3">
+<h3 class="anchored" data-anchor-id="calculations">Calculations</h3>
+<section id="angular-velocity-calculation-interrupts" class="level4">
+<h4 class="anchored" data-anchor-id="angular-velocity-calculation-interrupts">Angular Velocity Calculation (Interrupts)</h4>
+<p>Looking through the datasheets, we see our motor has some constant 408 <span class="math inline">\(\frac{\text{Ticks}}{\text{Revolution}}\)</span>. Doing some rearranging we discover that we’re going to need to compute the amount of ticks occuring in some time interval to find <span class="math inline">\(\frac{\text{Ticks}}{\text{Time}}\)</span>. Taking the quotient of these values … <span class="math inline">\(\frac{\frac{\text{Ticks}}{\text{Time}}}{\frac{\text{Ticks}}{\text{Revolution}}} = \frac{\text{Revolutions}}{\text{Time}}\)</span> which is angular velocity. So using a 200 ms sample period and triggering on the rising and falling edge of both signals, let’s increment or decrement some counter (for direction) and then divide by the 4 <span class="math inline">\(\times\)</span> the sample period to get our desired unknown: <span class="math inline">\(\frac{\text{Ticks}}{\text{Time}}\)</span>.</p>
+</section>
+<section id="polling-comparison" class="level4">
+<h4 class="anchored" data-anchor-id="polling-comparison">Polling Comparison</h4>
+<p>First calibrating my MCU by toggling a pin on and off in a while loop, we can see the fastest frequency our main function can operate is roughly 55 Hz. Taking the inverse, we see our sample period is <span class="math inline">\(T_{MCU} = 18.2 ms\)</span>.</p>
+<p>Additionally, looking at the encoder outputs of our motor, the occur at roughly <span class="math inline">\(1 kHz\)</span>. Which is updating every 1 ms.</p>
+<p>Using the Nyquist-Shannon Sampling Theorem (thank you Prof.&nbsp;Bassman &amp; Prof.&nbsp;Yong): <span class="math inline">\(F_{\text{Sampling}} = 2 \times F_{\text{Max}}\)</span>. Since our main loop samples at only 55 Hz, but the encoder outputs pulses at <span class="math inline">\(~1 kHz\)</span>, we are undersampling by nearly two orders of magnitude. According to the Nyquist–Shannon Sampling Theorem, we would need at least a <span class="math inline">\(2 kHz\)</span> sampling rate to accurately capture this signal, meaning our polling method will inevitably miss encoder transitions.</p>
+</section>
+</section>
+<section id="ai-prototype" class="level3">
+<h3 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h3>
+<p>This week I prompted Claude AI with “Write me interrupt handlers to interface with a quadrature encoder. I’m using the STM32L432KC, what pins should I connect the encoder to in order to allow it to easily trigger the interrupts?”. For additional context, I was able to upload the Datasheet and Reference Manual to the AI.</p>
+<div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 10px; background-color: #f8f9fa;">
+<pre><code class="language-c">
+/* Quadrature Encoder Interface for STM32L432KC
+ * Uses TIM2 in Encoder Mode with overflow/underflow interrupts
+ * 
+ * Connections:
+ * - Encoder Channel A -&gt; PA0 (TIM2_CH1)
+ * - Encoder Channel B -&gt; PA1 (TIM2_CH2)
+ */
+
+#include "stm32l4xx_hal.h"
+
+// Global variables
+TIM_HandleTypeDef htim2;
+volatile int32_t encoder_count = 0;
+volatile uint32_t overflow_count = 0;
+
+// Initialize quadrature encoder on TIM2
+void Encoder_Init(void)
+{
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    TIM_Encoder_InitTypeDef sConfig = {0};
+    TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+    __HAL_RCC_TIM2_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+
+    GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
+    HAL_GPIO_Init(GPIOA, &amp;GPIO_InitStruct);
+
+    htim2.Instance = TIM2;
+    htim2.Init.Prescaler = 0;
+    htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim2.Init.Period = 0xFFFFFFFF;
+    htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+
+    sConfig.EncoderMode = TIM_ENCODERMODE_TI12;
+    sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
+    sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
+    sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
+    sConfig.IC1Filter = 0x0F;
+    sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
+    sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
+    sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
+    sConfig.IC2Filter = 0x0F;
+
+    if (HAL_TIM_Encoder_Init(&amp;htim2, &amp;sConfig) != HAL_OK)
+        Error_Handler();
+
+    sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+    sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+    if (HAL_TIMEx_MasterConfigSynchronization(&amp;htim2, &amp;sMasterConfig) != HAL_OK)
+        Error_Handler();
+
+    __HAL_TIM_SET_COUNTER(&amp;htim2, 0x7FFFFFFF);
+    __HAL_TIM_ENABLE_IT(&amp;htim2, TIM_IT_UPDATE);
+
+    HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM2_IRQn);
+    HAL_TIM_Encoder_Start(&amp;htim2, TIM_CHANNEL_ALL);
+}
+
+void TIM2_IRQHandler(void)
+{
+    if (__HAL_TIM_GET_FLAG(&amp;htim2, TIM_FLAG_UPDATE) != RESET)
+    {
+        if (__HAL_TIM_GET_IT_SOURCE(&amp;htim2, TIM_IT_UPDATE) != RESET)
+        {
+            __HAL_TIM_CLEAR_IT(&amp;htim2, TIM_IT_UPDATE);
+            if (__HAL_TIM_IS_TIM_COUNTING_DOWN(&amp;htim2))
+                overflow_count--;
+            else
+                overflow_count++;
+        }
+    }
+}
+
+int32_t Encoder_GetCount(void)
+{
+    uint32_t tim_count = __HAL_TIM_GET_COUNTER(&amp;htim2);
+    int32_t adjusted_count = (int32_t)(tim_count - 0x7FFFFFFF);
+    return adjusted_count + (overflow_count * 0x100000000LL);
+}
+
+void Encoder_Reset(void)
+{
+    __HAL_TIM_SET_COUNTER(&amp;htim2, 0x7FFFFFFF);
+    overflow_count = 0;
+    encoder_count = 0;
+}
+
+int32_t Encoder_GetVelocity(void)
+{
+    static int32_t last_count = 0;
+    int32_t current_count = Encoder_GetCount();
+    int32_t velocity = current_count - last_count;
+    last_count = current_count;
+    return velocity;
+}
+
+int8_t Encoder_GetDirection(void)
+{
+    return __HAL_TIM_IS_TIM_COUNTING_DOWN(&amp;htim2) ? -1 : 1;
+}
+
+__weak void Error_Handler(void)
+{
+    __disable_irq();
+    while (1) {}
+}
+</code></pre>
+</div>
+<p>I think the AI did okay this week. It wanted to use STM32L4xx-hal-driver library and I didn’t put in a lot of effort getting that import to work. Also my check-off is in an hour and I would like to do work in other more important places. Briefly searching through the library, It looks like everything exists and it would likely compile however, I am skeptical of the velocity calculations.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>The design worked as intended. The interrupts trigger on the rising and falling edge of each signal and computes the correct angular velocity and direction of spin.</p>
 
 
 </section>
