@@ -192,7 +192,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="hardware-setup">Hardware Setup</h3>
 <p>I followed the wiring diagram on the <a href="https://hmc-e155.github.io/assets/lab/25GA370.pdf">Motor 25GA370 Datasheet</a>. Then checked Table 13 and 14 on the <a href="https://www.st.com/resource/en/datasheet/stm32l432kc.pdf">STM32L432KCUx MCU Datasheet</a> to choose PB1 and PB7 as 5 Volt tolerant pins:</p>
 <figure style="flex:1 1 40%; text-align:center;" class="figure">
-<img src="images/breadboard.png" alt="Breadboard" style="max-height:300px; width:auto; border-radius:8px; transform: rotate(90deg);" class="figure-img">
+<img src="images/breadboard.png" alt="Breadboard" style="max-height:300px; width:auto; border-radius:8px;" class="figure-img">
 <figcaption>
 Breadboard
 </figcaption>
@@ -225,7 +225,7 @@ Flowchart
 <h4 class="anchored" data-anchor-id="polling-comparison">Polling Comparison</h4>
 <p>First calibrating my MCU by toggling a pin on and off in a while loop, we can see the fastest frequency our main function can operate is roughly <span class="math inline">\(15 kHz\)</span>. Taking the inverse, we see our sample period is <span class="math inline">\(T_{MCU} = 66.6 \micro s\)</span>.</p>
 <figure style="flex:1 1 30%; text-align:center;" class="figure">
-<img src="images/polling.jpeg" alt="Polling Rates" style="width:100%; border-radius:8px;" class="figure-img">
+<img src="images/polling.png" alt="Polling Rates" style="width:100%; border-radius:8px;" class="figure-img">
 <figcaption>
 Polling Rates
 </figcaption>
