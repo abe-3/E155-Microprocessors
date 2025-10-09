@@ -223,9 +223,15 @@ Flowchart
 </section>
 <section id="polling-comparison" class="level4">
 <h4 class="anchored" data-anchor-id="polling-comparison">Polling Comparison</h4>
-<p>First calibrating my MCU by toggling a pin on and off in a while loop, we can see the fastest frequency our main function can operate is roughly 55 Hz. Taking the inverse, we see our sample period is <span class="math inline">\(T_{MCU} = 18.2 ms\)</span>.</p>
+<p>First calibrating my MCU by toggling a pin on and off in a while loop, we can see the fastest frequency our main function can operate is roughly <span class="math inline">\(15 kHz\)</span>. Taking the inverse, we see our sample period is <span class="math inline">\(T_{MCU} = 66.6 \micro s\)</span>.</p>
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/polling.jpeg" alt="Polling Rates" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Polling Rates
+</figcaption>
+</figure>
 <p>Additionally, looking at the encoder outputs of our motor, the occur at roughly <span class="math inline">\(1 kHz\)</span>. Which is updating every 1 ms.</p>
-<p>Using the Nyquist-Shannon Sampling Theorem (thank you Prof.&nbsp;Bassman &amp; Prof.&nbsp;Yong): <span class="math inline">\(F_{\text{Sampling}} = 2 \times F_{\text{Max}}\)</span>. Since our main loop samples at only 55 Hz, but the encoder outputs pulses at <span class="math inline">\(~1 kHz\)</span>, we are undersampling by nearly two orders of magnitude. According to the Nyquist–Shannon Sampling Theorem, we would need at least a <span class="math inline">\(2 kHz\)</span> sampling rate to accurately capture this signal, meaning our polling method will inevitably miss encoder transitions.</p>
+<p>Using the Nyquist-Shannon Sampling Theorem (thank you Prof.&nbsp;Bassman &amp; Prof.&nbsp;Yong): <span class="math inline">\(F_{\text{Sampling}} = 2 \times F_{\text{Max}}\)</span>. Since our main loop samples at 15 kHz, and the encoder outputs pulses at <span class="math inline">\(~1 kHz\)</span>, we are oversampling by nearly two orders of magnitude. According to the Nyquist–Shannon Sampling Theorem, we would need at least a <span class="math inline">\(2 kHz\)</span> sampling rate to accurately capture this signal, and our polling method catches more than enough encoder transitions.</p>
 </section>
 </section>
 <section id="ai-prototype" class="level3">
