@@ -155,6 +155,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#specifications" id="toc-specifications" class="nav-link" data-scroll-target="#specifications">Specifications</a></li>
   <li><a href="#microcontroller-integration" id="toc-microcontroller-integration" class="nav-link" data-scroll-target="#microcontroller-integration">Microcontroller Integration</a></li>
   <li><a href="#fpga-integration" id="toc-fpga-integration" class="nav-link" data-scroll-target="#fpga-integration">FPGA Integration</a></li>
   <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations">Calculations</a></li>
@@ -192,6 +193,26 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
 <p>DDRUM is a four-pad rhythm game in the spirit of DDR and Guitar Hero. Notes descend in four lanes on a display while a song plays. The player strikes one of four drum pads on the beat, and the system scores accuracy as Perfect, Good, or Miss with real-time visual feedback and a running score/combo.</p>
 <p>The STM32L432 (Nucleo-L432KCU) acts as the timekeeper and system coordinator: it plays audio, timestamps pad hits, and streams visual data, and hit events to the iCE40UP5K (UPduino v3.1) FPGA over SPI. The FPGA renders the lanes and sprites at 640×480 @ 60 Hz and performs time-window scoring against the same timebase the MCU maintains. The result is a responsive, low-latency game that cleanly divides responsibilities: MCU for sensing, timing, and audio; FPGA for graphics and scoring logic. Success is defined as smooth 60 FPS visuals with four color lanes and readable targets consistent audio-visual synchronization across at least one complete charted song, consistent and accurate pad detection with low false triggers, and real-time judgments displayed without perceptible lag. The design uses both the MCU and FPGA in roles beyond prior labs and introduces non-trivial new hardware: a resistor-ladder VGA DAC, piezo sensor front-ends, and either a DFPlayer audio path or a PWM/DAC path.</p>
+</section>
+<section id="specifications" class="level3">
+<h3 class="anchored" data-anchor-id="specifications">Specifications</h3>
+<ul class="task-list">
+<li><label><input type="checkbox"><strong>Frame Rate:</strong> 60 FPS steady output at 640×480 resolution via VGA DAC</label></li>
+<li><label><input type="checkbox"><strong>Audio Playback:</strong> MP3 via DFPlayer Mini module at non-noticable latency from MCU timing source</label></li>
+<li><label><input type="checkbox"><strong>Input Detection:</strong> Four piezo sensors with non-noticeable analog-to-interrupt response time.</label></li>
+<li><label><input type="checkbox"><strong>Timing Precision:</strong> MCU master clock maintains ±1 ms synchronization across audio, visuals, and scoring.</label></li>
+<li><label><input type="checkbox"><strong>Latency Budget:</strong> End-to-end pad hit to on-screen feedback &lt;10 ms typical.<br>
+</label></li>
+<li><label><input type="checkbox"><strong>Scoring Windows:</strong> Perfect ±35 ms, Good ±75 ms, Miss &gt;±120 ms.<br>
+</label></li>
+<li><label><input type="checkbox"><strong>Visual Features:</strong> Four color-coded lanes, falling notes, combo counter, and hit flash overlay.<br>
+</label></li>
+<li><label><input type="checkbox"><strong>Power System:</strong> 5 V main supply shared between MCU, FPGA, and audio subsystem with proper level matching.<br>
+</label></li>
+<li><label><input type="checkbox"><strong>Physical Design:</strong> Four 30–35 mm drum pads with individual sensor circuits mounted in a laser-cut or 3D-printed enclosure.</label></li>
+<li><label><input type="checkbox"><strong>Memory Reading:</strong> Quickly reads in music data from outside SD card</label></li>
+<li><label><input type="checkbox"><strong>Target Success Criteria:</strong> Smooth visuals, accurate scoring, synchronized audio, and a full playable song with consistent performance.</label></li>
+</ul>
 </section>
 <section id="microcontroller-integration" class="level3">
 <h3 class="anchored" data-anchor-id="microcontroller-integration">Microcontroller Integration</h3>
