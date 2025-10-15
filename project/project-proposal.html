@@ -201,6 +201,7 @@ window.Quarto = {
 <section id="fpga-integration" class="level3">
 <h3 class="anchored" data-anchor-id="fpga-integration">FPGA Integration</h3>
 <p>On the iCE40UP5K the video pipeline uses standard 640×480p60 timing derived from an internal PLL running a ~25.2 MHz pixel clock. Horizontal and vertical counters generate pixel coordinates during the active region. Rather than allocate a full framebuffer, the renderer is a streaming compositor: for each pixel it decides which lane it falls into and whether a note sprite should be shown at that (x, y) based on the song time. A small BRAM region holds compact note tuples (drum number, time of hit) that are preloaded from the MCU before play. A separate palette/glyph LUT stores 1-bit masks for note hit flashes, and simple HUD glyphs. The mapping from scheduled onset to screen position is y = y0 + v · (sont time − hit time), where the scroll rate v is set by the chart header. A dedicated scoring core in the FPGA receives hit events from the MCU (lane and timestamp) and compares them to the nearest scheduled onset using fixed thresholds (for example ±35 ms Perfect, ±75 ms Good, Miss beyond ±120 ms). It updates combo and score, which the renderer overlays as HUD elements. The SPI slave on the FPGA parses four message types from the MCU: an INIT_HDR that carries BPM/scroll and palette parameters; NOTE_CHUNK blocks that populate BRAM; a periodic TIME_BEACON (about every 16.7 ms) that sets the authoritative song_time_ms; and immediate HIT_EVENT packets as pad interrupts occur. Video drives a simple binary-weighted 4-bit R/G/B DAC per color plus HSYNC/VSYNC to a VGA connector. This combination of a streaming sprite/LUT compositor, protocol parsing, and VGA timing extends well beyond what was covered in labs.</p>
+<p>I believe whichever screen we use, reading images and making some graphic, then synchronizing it with some song will the riskest element of our design.</p>
 </section>
 <section id="calculations" class="level3">
 <h3 class="anchored" data-anchor-id="calculations">Calculations</h3>
@@ -410,14 +411,14 @@ window.Quarto = {
 <td>Oct 20</td>
 <td>AES Lecture &amp; FPGA Workshop</td>
 <td><a href="https://hmc-e155.github.io/lab/lab6/">Lab 6</a></td>
-<td>3D Model the Drums and embed sensors</td>
+<td>Model and test one piezo AFE channel on a breadboard. (A) Implement basic VGA timing generator on FPGA. (S)</td>
 </tr>
 <tr class="odd">
 <td><strong>10</strong></td>
 <td>Oct 27</td>
 <td>Graphics, Displays, Motors &amp; Speakers</td>
 <td><a href="https://hmc-e155.github.io/lab/lab7/">Lab 7</a></td>
-<td>Get Display Working and syncronize with music playing</td>
+<td>Write MCU code to read one pad and send hits via SPI. (A) Render a single static lane and a movable sprite on the VGA output. (S)</td>
 </tr>
 <tr class="even">
 <td><strong>11</strong></td>
