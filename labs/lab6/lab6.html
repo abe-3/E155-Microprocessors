@@ -68,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -126,6 +155,12 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#hardware-setup" id="toc-hardware-setup" class="nav-link" data-scroll-target="#hardware-setup">Hardware Setup</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations">Calculations</a></li>
+  <li><a href="#verification" id="toc-verification" class="nav-link" data-scroll-target="#verification">Verification</a></li>
+  <li><a href="#ai-prototype" id="toc-ai-prototype" class="nav-link" data-scroll-target="#ai-prototype">AI Prototype</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -151,9 +186,147 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="hours-spent-on-lab-15-hours" class="level4">
+<h4 class="anchored" data-anchor-id="hours-spent-on-lab-15-hours">Hours spent on lab: 15 Hours</h4>
+</section>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
-<p>TO-DO</p>
+<p>In this lab, we learn about one of the most used methods of data communication, Serial Peripheral Interface or SPI. This saves people from making cumbersome circuits and avoid wiring many different signals in parallel. For learning this, we are using the <a href="https://hmc-e155.github.io/assets/doc/ds1722.pdf">DS1722 Temperature Sensor</a> which communicates some hex value based on the temperature which you can translate to some threshold to find temperature in known units.</p>
+</section>
+<section id="hardware-setup" class="level3">
+<h3 class="anchored" data-anchor-id="hardware-setup">Hardware Setup</h3>
+<p>We were provided with a breakout board to easily access the necessary Power and SPI pins. I connected the <span class="math inline">\(\text{COPI}\)</span>, <span class="math inline">\(\text{CIPO}\)</span>, <span class="math inline">\(\text{S}_{\text{CLK}}\)</span>, and <span class="math inline">\(\text{CS}\)</span> pins respectively from our MCU’s development board to our Temperature Sensor.</p>
+<figure style="flex:1 1 40%; text-align:center;" class="figure">
+<img src="images/breadboard.png" alt="Breadboard" style="max-height:300px; width:auto; border-radius:8px;" class="figure-img">
+<figcaption>
+Breadboard
+</figcaption>
+</figure>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+The schematic for the circuit includes the MCU, and the DS1722 Temperature Sensor.
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/schematic.jpeg" alt="Schematic" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Schematic
+</figcaption>
+</figure>
+</section>
+<section id="calculations" class="level3">
+<h3 class="anchored" data-anchor-id="calculations">Calculations</h3>
+<p>The method of reading temperature through SPI is <span class="math inline">\(\text{Temperature} [\degree \text{C}] = \text{MSB} + \frac{\text{LSB}}{256}\)</span>. Which we can retrieve by shifting the 8-bit word by 8 to get the most significant bit.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Resolution (bits)</th>
+<th>Command Byte</th>
+<th>Conversion Time (ms)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>8</td>
+<td>0xE0</td>
+<td>75</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>0xE2</td>
+<td>150</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>0xE4</td>
+<td>300</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0xE6</td>
+<td>600</td>
+</tr>
+<tr class="odd">
+<td>12 (default)</td>
+<td>0xE8</td>
+<td>1200</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="verification" class="level3">
+<h3 class="anchored" data-anchor-id="verification">Verification</h3>
+<p>Connecting the SPI data pins to the oscilloscope logic analyzer and running a SPI function like our temperature read function, we can visualize the command signals, dummy bits, and SPI output (LSB and MSB) on the oscilloscope.</p>
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/logic_analyzer.png" alt="Logic Analyzer" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Logic Analyzer Trace
+</figcaption>
+</figure>
+</section>
+<section id="ai-prototype" class="level3">
+<h3 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h3>
+<p>This week I prompted ChatGPT with “I’m making a web portal to interface with a temperature sensor. Create a HTML page that looks good and is intuitive to show the temperature, control an LED, and change the precision of the readout.” For additional context, I provided the macros I was using for pin outs.</p>
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/ai_prototype.png" alt="AI Prototype" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+AI Prototype
+</figcaption>
+</figure>
+<div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 10px; background-color: #f8f9fa;">
+<pre><code class="language-c">
+#include "stm32l432xx.h"
+#include stdint.h
+
+#define DS1722_CS_LOW()    (GPIOA-&gt;BSRR = (1U &lt;&lt; (SPI_CS + 16))) // Clear bit
+#define DS1722_CS_HIGH()   (GPIOA-&gt;BSRR = (1U &lt;&lt; SPI_CS))        // Set bit
+
+#define DS1722_READ_CMD    0x02  // Read temperature MSB register
+#define DS1722_TEMP_MSB    0x02  // Address of temperature MSB register
+
+float read_temp_DS1722(void)
+{
+    uint8_t msb, lsb;
+    uint16_t raw_temp;
+
+    // Select DS1722
+    DS1722_CS_LOW();
+
+    // Send address of temperature MSB (auto-increment allows reading both bytes)
+    while (!(SPI1-&gt;SR &amp; SPI_SR_TXE));
+    *((__IO uint8_t *)&amp;SPI1-&gt;DR) = DS1722_TEMP_MSB;
+    while (!(SPI1-&gt;SR &amp; SPI_SR_RXNE));
+    (void)SPI1-&gt;DR; // dummy read to clear RXNE
+
+    // Read MSB
+    while (!(SPI1-&gt;SR &amp; SPI_SR_TXE));
+    *((__IO uint8_t *)&amp;SPI1-&gt;DR) = 0x00;  // dummy byte
+    while (!(SPI1-&gt;SR &amp; SPI_SR_RXNE));
+    msb = SPI1-&gt;DR;
+
+    // Read LSB
+    while (!(SPI1-&gt;SR &amp; SPI_SR_TXE));
+    *((__IO uint8_t *)&amp;SPI1-&gt;DR) = 0x00;
+    while (!(SPI1-&gt;SR &amp; SPI_SR_RXNE));
+    lsb = SPI1-&gt;DR;
+
+    // Deassert CS
+    DS1722_CS_HIGH();
+
+    // Combine and convert
+    raw_temp = ((uint16_t)msb &lt;&lt; 8) | lsb;
+    float temp_c = (float)raw_temp / 256.0f; // 1 LSB = 1/256 °C
+
+    return temp_c;
+}
+</code></pre>
+</div>
+<p>I think the AI did really good this week. Its design looks like some cheap web app that I’d see which is sort of nice and well within specification.</p>
+<p>For the actual reading temperature SPI code, I was very impressed, SPI has a lot of configuration options that I definetly struggled the most with and assumed the LLM would hallucinate registers or settings making it not work.</p>
+<p>Substiting both the web page and SPI reading function didn’t make any functionality changes to my project making it work just as intended.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>The design worked as intended. The temperature can go seamlessly into the negative range and reads what seems like reasonable values. A user can select a reading resolution through the webpage.</p>
 
 
 </section>
