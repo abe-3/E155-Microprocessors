@@ -126,6 +126,11 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
+  <li><a href="#simulation-verification" id="toc-simulation-verification" class="nav-link" data-scroll-target="#simulation-verification">Simulation Verification</a></li>
+  <li><a href="#hardware-verification" id="toc-hardware-verification" class="nav-link" data-scroll-target="#hardware-verification">Hardware Verification</a></li>
+  <li><a href="#ai-prototype" id="toc-ai-prototype" class="nav-link" data-scroll-target="#ai-prototype">AI Prototype</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -151,9 +156,323 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="hours-spent-on-lab-12-hours" class="level4">
+<h4 class="anchored" data-anchor-id="hours-spent-on-lab-12-hours">Hours spent on lab: 12 Hours</h4>
+</section>
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
-<p>TO-DO</p>
+<p>After learning SPI Communication in Lab 6, we are returning back to System Verilog and our FPGA to incorporate our new learned skill to have them communicate. Our Microcontroller will act as the host, sending a 128-bit plaintext message and a 128-bit key via SPI. Our FPGA performs a very complex sequence of operations to function as a 128-bit AES encryption hardware accelerator. The FPGA receives the inputs, computes the encryption, and transmits the resulting ciphertext back to the microcontroller for verification.</p>
+</section>
+<section id="block-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
+<p>The block diagram for the hardware involves a top-level module (aes_starter) which instantiates the provided SPI interface and the custom aes_core module.</p>
+<p>Due to synthesis constraints, the logic is too large to implement all encryption rounds as one giant block of combinational logic. Therefore, the aes_core must be designed to perform the rounds sequentially. This architecture is partitioned into a datapath and a controller.</p>
+<p>Controller: A Finite State Machine (FSM) that generates the control signals to manage the flow of data through the datapath. It sequences the 10 rounds of encryption, asserts the correct multiplexer select signals, and manages register enables. The FSM must account for the one-cycle latency of the sbox synchronous RAM lookup.</p>
+<p>Datapath: Consists of registers to hold the 128-bit intermediate state and the round key. It includes multiplexers and the combinational logic blocks for the four main AES transformations:</p>
+<ul>
+<li>sbox: The provided byte-substitution module (using sbox.txt).</li>
+<li>ShiftRows: A combinational wire-shuffling module.</li>
+<li>MixColumns: The provided Galois field arithmetic module.</li>
+<li>AddRoundKey: A bitwise XOR operation.</li>
+</ul>
+The controller dictates when the state register is loaded and which transformation’s output is fed back as the next input, iterating until the final ciphertext is produced and ready for SPI transmission.
+<figure style="flex:1 1 30%; text-align:center;" class="figure">
+<img src="images/block_diagram.jpeg" alt="Block Diagram" style="width:100%; border-radius:8px;" class="figure-img">
+<figcaption>
+Block Diagram
+</figcaption>
+</figure>
+</section>
+<section id="simulation-verification" class="level3">
+<h3 class="anchored" data-anchor-id="simulation-verification">Simulation Verification</h3>
+For my 4 custom modules to implement AES Encryption, you can see my verification of each of them:
+<style>
+  .waveform-figure {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .waveform-figure img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: zoom-in;
+  }
+
+  .waveform-figure figcaption {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #555;
+  }
+
+  /* Layout containers */
+  .waveform-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .waveform-row.top img {
+    max-width: 600px; /* Large top images */
+  }
+
+  .waveform-row.bottom img {
+    max-width: 300px; /* Smaller bottom images */
+  }
+</style>
+<!-- Top two large images -->
+<div class="waveform-row top">
+<figure class="waveform-figure figure">
+<a href="images/aes_spi_waves.png" target="_blank"> <img src="images/aes_spi_waves.png" alt="Top Level SPI Testbench" class="figure-img"> </a>
+<figcaption>
+Top Level SPI Testbench
+</figcaption>
+</figure>
+<figure class="waveform-figure figure">
+<a href="images/aes_core_waves.png" target="_blank"> <img src="images/aes_core_waves.png" alt="Main Core Module Testbench" class="figure-img"> </a>
+<figcaption>
+Main Core Module Testbench
+</figcaption>
+</figure>
+</div>
+<!-- Bottom three smaller images -->
+<div class="waveform-row bottom">
+<figure class="waveform-figure figure">
+<a href="images/core_key_waves.png" target="_blank"> <img src="images/core_key_waves.png" alt="Key Expansion Testbench" class="figure-img"> </a>
+<figcaption>
+Key Expansion Testbench
+</figcaption>
+</figure>
+<figure class="waveform-figure figure">
+<a href="images/core_round_logic_waves.png" target="_blank"> <img src="images/core_round_logic_waves.png" alt="Round Logic Testbench" class="figure-img"> </a>
+<figcaption>
+Round Logic Testbench
+</figcaption>
+</figure>
+<figure class="waveform-figure figure">
+<a href="images/core_subbytes_waves.png" target="_blank"> <img src="images/core_subbytes_waves.png" alt="Subbytes Testbench" class="figure-img"> </a>
+<figcaption>
+Subbytes Testbench
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="hardware-verification" class="level3">
+<h3 class="anchored" data-anchor-id="hardware-verification">Hardware Verification</h3>
+<p>Connecting the SPI data pins to the oscilloscope logic analyzer and running a SPI function like our temperature read function, we can visualize the command signals, SPI output, and encrypted words being sent to and from the FPGA.</p>
+<table style="width:100%; border-collapse: collapse;">
+<tbody><tr style="border: none;">
+<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
+<figure class="figure">
+<a href="images/logic_analyzer_1.png" target="_blank"> <img src="images/logic_analyzer_1.png" alt="Logic Analyzer Trace 1" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
+<figcaption>
+Logic Analyzer Trace 1
+</figcaption>
+</figure>
+</td>
+<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
+<figure class="figure">
+<a href="images/logic_analyzer_2.png" target="_blank"> <img src="images/logic_analyzer_2.png" alt="Logic Analyzer Trace 2" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
+<figcaption>
+Logic Analyzer Trace 2
+</figcaption>
+</figure>
+</td>
+<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
+<figure class="figure">
+<a href="images/logic_analyzer_3.png" target="_blank"> <img src="images/logic_analyzer_3.png" alt="Logic Analyzer Trace 3" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
+<figcaption>
+Logic Analyzer Trace 3
+</figcaption>
+</figure>
+</td>
+</tr>
+<tr style="border: none;">
+<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
+<figure class="figure">
+<a href="images/logic_analyzer_4.png" target="_blank"> <img src="images/logic_analyzer_4.png" alt="Logic Analyzer Trace 4" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
+<figcaption>
+Logic Analyzer Trace 4
+</figcaption>
+</figure>
+</td>
+<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
+<figure class="figure">
+<a href="images/logic_analyzer_5.png" target="_blank"> <img src="images/logic_analyzer_5.png" alt="Logic Analyzer Trace 5" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
+<figcaption>
+Logic Analyzer Trace 5
+</figcaption>
+</figure>
+</td>
+<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
+<figure class="figure">
+<a href="images/logic_analyzer_6.png" target="_blank"> <img src="images/logic_analyzer_6.png" alt="Logic Analyzer Trace 6" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
+<figcaption>
+Logic Analyzer Trace 6
+</figcaption>
+</figure>
+</td>
+</tr>
+</tbody></table>
+</section>
+<section id="ai-prototype" class="level3">
+<h3 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h3>
+<p>This week I prompted ChatGPT with “Write SystemVerilog HDL to implement the KeyExpansion logic described in the FIPS-197 uploaded document. The module should be purely combinational, using the previous key and current round number to calculate the next key. Assume other required modules (SubWord and RotWord) are already implemented.” For additional context, I provided the NIST AES Specifications.</p>
+<div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 10px; background-color: #f8f9fa;">
+<pre><code class="verilog">
+// aes_keyexp_round.sv
+// Combinational per-round AES-128 KeyExpansion
+// Assumes SUBWORD and ROTWORD are provided elsewhere.
+// Produces next 128-bit round key from previous 128-bit round key and round number.
+//
+// Reference: FIPS-197 Algorithm 2 (KEYEXPANSION) and Table 5 (Rcon). 
+
+module aes_keyexp_round #(
+    parameter int AES_NK = 4   // only AES_NK==4 (AES-128) is implemented here
+) (
+    input  logic [127:0] prev_key,   // previous round key: {w0, w1, w2, w3} (big-endian word order)
+    input  logic [3:0]   round_idx,  // round index (1..10 for AES-128). round_idx==0 -&gt; next_key = prev_key (default)
+    output logic [127:0] next_key
+);
+
+    // Rcon table (words): index 1..10 valid for AES-128
+    localparam logic [31:0] RCON [1:10] = '{
+        32'h01000000, 32'h02000000, 32'h04000000, 32'h08000000,
+        32'h10000000, 32'h20000000, 32'h40000000, 32'h80000000,
+        32'h1b000000, 32'h36000000
+    };
+
+    // Word extraction (big-endian grouping)
+    logic [31:0] w0, w1, w2, w3;
+    assign {w0, w1, w2, w3} = prev_key; // prev_key[127:96] = w0, [95:64]=w1, [63:32]=w2, [31:0]=w3
+
+    // External helpers (assumed implemented elsewhere).
+    // Provide prototypes so synthesis/simulation tools know the calls exist.
+    // Replace these with module/task calls if your implementation exposes them differently.
+    function automatic logic [31:0] SUBWORD(input logic [31:0] in_word);
+        // implemented elsewhere; prototype only
+    endfunction
+
+    function automatic logic [31:0] ROTWORD(input logic [31:0] in_word);
+        // implemented elsewhere; prototype only
+    endfunction
+
+    // Internal temps / outputs
+    logic [31:0] temp, nw0, nw1, nw2, nw3;
+
+    // Combinational expansion logic (AES-128/Nk==4)
+    always_comb begin
+        // Default: pass-through if round_idx == 0
+        if (AES_NK != 4) begin
+            // Not implemented for Nk != 4 in this module.
+            // Output zeros to make behavior deterministic; caller should not use this for Nk != 4.
+            next_key = '0;
+        end else if (round_idx == 0) begin
+            next_key = prev_key;
+        end else begin
+            // temp = SUBWORD(ROTWORD(w3)) XOR Rcon[round_idx]
+            // round_idx range check: clamp 1..10 for AES-128
+            int rindex = (round_idx &lt; 1) ? 1 : (round_idx &gt; 10) ? 10 : round_idx;
+            temp = SUBWORD(ROTWORD(w3)) ^ RCON[rindex];
+
+            // w4 = w0 ^ temp
+            nw0 = w0 ^ temp;
+            // w5 = w1 ^ w4
+            nw1 = w1 ^ nw0;
+            // w6 = w2 ^ w5
+            nw2 = w2 ^ nw1;
+            // w7 = w3 ^ w6
+            nw3 = w3 ^ nw2;
+
+            next_key = {nw0, nw1, nw2, nw3};
+        end
+    end
+endmodule
+</code></pre>
+</div>
+<p>The AI did pretty bad this week. The logic and sequence makes sense, however, it already is far too big to upload to our Upduino FPGA, likely because of the 96 XOR operations happening in parallel and the large functions it is declaring.</p>
+We can continue and see how the same LLM will perform for the same task with a new prompt: “Write SystemVerilog HDL to implement the following logic:
+<div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 10px; background-color: #0fffff;">
+<pre><code class="verilog">
+i = 0
+while i &lt; Nk do
+    w[i] &lt;- key[4*i..4*i+3]
+    i &lt;- i+1
+end while
+while i &lt;= 4 * Nr + 3 do
+    temp &lt;- w[i-1]
+    if i mod Nk = 0 then
+        temp &lt;- module1(module2(temp)) (+) Rcon[i/Nk]
+    else if Nk &gt; 6 and i mod Nk = 4 then
+        temp &lt;- module1(temp)
+    end if
+    w[i] &lt;- w[i-Nk] (+) temp
+    i &lt;- i + 1
+end while
+return w
+</code></pre>
+</div>
+<p>Assume module1 and module2 are existing modules that can be instantiated. (+) refers to XOR. Unwrap the loop in the provided pseudo code so it uses the previous iterations output to generate the new iteration.</p>
+<p>Do not use any existing knowledge of the AES specifications in your answer.”</p>
+<p>It produces the following:</p>
+<div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 10px; background-color: #f8f9fa;">
+<pre><code class="system-verilog">
+module KeyExpansion #(
+    parameter int Nk = 4,              // number of key words
+    parameter int Nr = 10              // number of rounds
+)(
+    input  logic [32*Nk-1:0] key,      // input key (Nk words)
+    input  logic [31:0]       Rcon   [0:((4*Nr+3)/Nk)],
+    output logic [32*(4*Nr+4)-1:0] w   // expanded key words
+);
+
+    // Intermediate array of words
+    logic [31:0] w_array [0:(4*Nr+3)];
+    logic [31:0] temp;
+    logic [31:0] mod1_out, mod2_out;
+
+    // Modules (instantiated once, used combinationally)
+    module1 u_mod1 (.in(temp), .out(mod1_out));
+    module2 u_mod2 (.in(temp), .out(mod2_out));
+
+    // Initial Nk words come directly from key
+    genvar i;
+    generate
+        for (i = 0; i &lt; Nk; i++) begin
+            assign w_array[i] = key[32*i +: 32];
+        end
+    endgenerate
+
+    // Iteratively expand key schedule
+    always_comb begin
+        for (int j = Nk; j &lt;= 4*Nr + 3; j++) begin
+            temp = w_array[j-1];
+            if ((j % Nk) == 0) begin
+                temp = mod1_out ^ Rcon[j/Nk];
+            end
+            else if ((Nk &gt; 6) &amp;&amp; ((j % Nk) == 4)) begin
+                temp = mod1_out;
+            end
+            w_array[j] = w_array[j-Nk] ^ temp;
+        end
+    end
+
+    // Flatten w_array to output vector
+    generate
+        for (i = 0; i &lt;= 4*Nr + 3; i++) begin
+            assign w[32*i +: 32] = w_array[i];
+        end
+    endgenerate
+endmodule
+</code></pre>
+</div>
+<p>Similarily to last time, this module is extremely expensive. ChatGPT is mindlessly running a lot of for loops many times more than necessary creating a lot fo extra hardware.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>The design worked as intended. Our top level testbench passes with no errors and successfully returns the decrypted word.</p>
 
 
 </section>
