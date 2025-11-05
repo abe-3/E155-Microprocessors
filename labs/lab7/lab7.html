@@ -262,60 +262,44 @@ Subbytes Testbench
 <section id="hardware-verification" class="level3">
 <h3 class="anchored" data-anchor-id="hardware-verification">Hardware Verification</h3>
 <p>Connecting the SPI data pins to the oscilloscope logic analyzer and running a SPI function like our temperature read function, we can visualize the command signals, SPI output, and encrypted words being sent to and from the FPGA.</p>
-<table style="width:100%; border-collapse: collapse;">
-<tbody><tr style="border: none;">
-<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
-<figure class="figure">
-<a href="images/logic_analyzer_1.png" target="_blank"> <img src="images/logic_analyzer_1.png" alt="Logic Analyzer Trace 1" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
-<figcaption>
-Logic Analyzer Trace 1
-</figcaption>
-</figure>
-</td>
-<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
-<figure class="figure">
-<a href="images/logic_analyzer_2.png" target="_blank"> <img src="images/logic_analyzer_2.png" alt="Logic Analyzer Trace 2" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
-<figcaption>
-Logic Analyzer Trace 2
-</figcaption>
-</figure>
-</td>
-<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
-<figure class="figure">
-<a href="images/logic_analyzer_3.png" target="_blank"> <img src="images/logic_analyzer_3.png" alt="Logic Analyzer Trace 3" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
-<figcaption>
-Logic Analyzer Trace 3
-</figcaption>
-</figure>
-</td>
-</tr>
-<tr style="border: none;">
-<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
-<figure class="figure">
-<a href="images/logic_analyzer_4.png" target="_blank"> <img src="images/logic_analyzer_4.png" alt="Logic Analyzer Trace 4" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
-<figcaption>
-Logic Analyzer Trace 4
-</figcaption>
-</figure>
-</td>
-<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
-<figure class="figure">
-<a href="images/logic_analyzer_5.png" target="_blank"> <img src="images/logic_analyzer_5.png" alt="Logic Analyzer Trace 5" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
-<figcaption>
-Logic Analyzer Trace 5
-</figcaption>
-</figure>
-</td>
-<td style="width: 33.33%; text-align: center; padding: 10px; border: none;">
-<figure class="figure">
-<a href="images/logic_analyzer_6.png" target="_blank"> <img src="images/logic_analyzer_6.png" alt="Logic Analyzer Trace 6" style="width:100%; border-radius:8px; cursor: zoom-in;" class="figure-img"> </a>
-<figcaption>
-Logic Analyzer Trace 6
-</figcaption>
-</figure>
-</td>
-</tr>
-</tbody></table>
+<style>
+/* Container for the scrollable row */
+.image-scroll-row {
+  overflow-x: auto;  /* Enables horizontal scrolling */
+  white-space: nowrap; /* Keeps all images in a single line */
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Style for the images within the scrollable row */
+.image-scroll-row img {
+  display: inline-block; /* Allows images to line up horizontally */
+  height: 400px;         /* Sets a uniform height. Adjust as needed. */
+  width: auto;           /* Maintains aspect ratio */
+  margin-right: 10px;    /* Adds spacing between images */
+  border: 1px solid #ccc;
+}
+</style>
+<h3 class="anchored">
+Plain Text - Logic Analyzer Trace
+</h3>
+<div class="image-scroll-row">
+<p><img src="images/PTLA01.png" alt="Plain Text Trace 1"> <img src="images/PTLA02.png" alt="Plain Text Trace 2"> <img src="images/PTLA03.png" alt="Plain Text Trace 3"> <img src="images/PTLA04.png" alt="Plain Text Trace 4"> <img src="images/PTLA05.png" alt="Plain Text Trace 5"> <img src="images/PTLA06.png" alt="Plain Text Trace 6"> <img src="images/PTLA07.png" alt="Plain Text Trace 7"> <img src="images/PTLA08.png" alt="Plain Text Trace 8"> <img src="images/PTLA09.png" alt="Plain Text Trace 9"></p>
+</div>
+<h3 class="anchored">
+Key - Logic Analyzer Trace
+</h3>
+<div class="image-scroll-row">
+<p><img src="images/KEYLA01.png" alt="Key Trace 1"> <img src="images/KEYLA02.png" alt="Key Trace 2"> <img src="images/KEYLA03.png" alt="Key Trace 3"> <img src="images/KEYLA04.png" alt="Key Trace 4"> <img src="images/KEYLA05.png" alt="Key Trace 5"> <img src="images/KEYLA06.png" alt="Key Trace 6"> <img src="images/KEYLA07.png" alt="Key Trace 7"> <img src="images/KEYLA08.png" alt="Key Trace 8"></p>
+</div>
+<h3 class="anchored">
+Cipher Text - Logic Analyzer Trace
+</h3>
+<div class="image-scroll-row">
+<p><img src="images/CTLA01.png" alt="Cipher Text Trace 1"> <img src="images/CTLA02.png" alt="Cipher Text Trace 2"> <img src="images/CTLA03.png" alt="Cipher Text Trace 3"> <img src="images/CTLA04.png" alt="Cipher Text Trace 4"> <img src="images/CTLA05.png" alt="Cipher Text Trace 5"> <img src="images/CTLA06.png" alt="Cipher Text Trace 6"> <img src="images/CTLA07.png" alt="Cipher Text Trace 7"> <img src="images/CTLA08.png" alt="Cipher Text Trace 8"></p>
+</div>
 </section>
 <section id="ai-prototype" class="level3">
 <h3 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h3>
