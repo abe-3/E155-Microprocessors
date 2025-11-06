@@ -192,41 +192,35 @@ window.Quarto = {
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
 <p>DDRUM is a four-pad rhythm game in the spirit of DDR and Guitar Hero. Notes descend in four lanes on a display while a song plays. The player strikes one of four drum pads on the beat, and the system scores accuracy as Perfect, Good, or Miss with real-time visual feedback and a running score/combo.</p>
-<p>The STM32L432 (Nucleo-L432KCU) acts as the timekeeper and system coordinator: it plays audio, timestamps pad hits, and streams visual data, and hit events to the iCE40UP5K (UPduino v3.1) FPGA over SPI. The FPGA renders the lanes and sprites at 640×480 @ 60 Hz and performs time-window scoring against the same timebase the MCU maintains. The result is a responsive, low-latency game that cleanly divides responsibilities: MCU for sensing, timing, and audio; FPGA for graphics and scoring logic. Success is defined as smooth 60 FPS visuals with four color lanes and readable targets consistent audio-visual synchronization across at least one complete charted song, consistent and accurate pad detection with low false triggers, and real-time judgments displayed without perceptible lag. The design uses both the MCU and FPGA in roles beyond prior labs and introduces non-trivial new hardware: a resistor-ladder VGA DAC, piezo sensor front-ends, and either a DFPlayer audio path or a PWM/DAC path.</p>
+<p>The STM32L432 (Nucleo-L432KCU) acts as the central brain and system coordinator: it reads <code>.wav</code> files from an SD card, performs an <strong>offline FFT-based beat-detection analysis</strong> (using the <strong>CMSIS-DSP</strong> library) to auto-generate a beatmap, streams audio via <strong>I2S+DMA</strong> to a DAC, and drives the <strong>LED Matrix</strong>. The iCE40UP5K (UPduino v3.1) FPGA acts as a <strong>high-precision I/O accelerator</strong>: it captures drum pad hits with nanosecond accuracy, timestamps them, and stores them in a <strong>FIFO</strong> for the MCU to read. The result is a responsive, low-latency game that cleanly divides responsibilities: MCU for all logic, audio, and graphics; FPGA for time-critical hit detection. Success is defined as smooth 30+ FPS visuals on the Matrix, consistent audio-visual synchronization, accurate beat-detection on at least one song, consistent and accurate pad detection via the FPGA, and a real-time scoring system with a leaderboard. The design uses both the MCU and FPGA in roles beyond prior labs and introduces non-trivial new hardware: an I2S DAC, piezo sensor inputs, and an SD card reader.</p>
 </section>
 <section id="specifications" class="level3">
 <h3 class="anchored" data-anchor-id="specifications">Specifications</h3>
 <ul class="task-list">
-<li><label><input type="checkbox"><strong>Frame Rate:</strong> 60 FPS steady output at 640×480 resolution via VGA DAC</label></li>
-<li><label><input type="checkbox"><strong>Audio Playback:</strong> MP3 via DFPlayer Mini module at non-noticable latency from MCU timing source</label></li>
-<li><label><input type="checkbox"><strong>Input Detection:</strong> Four piezo sensors with non-noticeable analog-to-interrupt response time.</label></li>
-<li><label><input type="checkbox"><strong>Timing Precision:</strong> MCU master clock maintains ±1 ms synchronization across audio, visuals, and scoring.</label></li>
-<li><label><input type="checkbox"><strong>Latency Budget:</strong> End-to-end pad hit to on-screen feedback &lt;10 ms typical.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>Scoring Windows:</strong> Perfect ±35 ms, Good ±75 ms, Miss &gt;±120 ms.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>Visual Features:</strong> Four color-coded lanes, falling notes, combo counter, and hit flash overlay.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>Power System:</strong> 5 V main supply shared between MCU, FPGA, and audio subsystem with proper level matching.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>Physical Design:</strong> Four 30–35 mm drum pads with individual sensor circuits mounted in a laser-cut or 3D-printed enclosure.</label></li>
-<li><label><input type="checkbox"><strong>Memory Reading:</strong> Quickly reads in music data from outside SD card</label></li>
+<li><label><input type="checkbox"><strong>Frame Rate:</strong> 30+ FPS steady output on 60 x 60 LED Matrix</label></li>
+<li><label><input type="checkbox"><strong>Audio Playback:</strong> <code>.wav</code> file playback via I2S DAC with DMA</label></li>
+<li><label><input type="checkbox"><strong>Audio Analysis:</strong> Successful offline beat-detection (bass/snare/cymbal) using the <strong>CMSIS-DSP FFT</strong> library.</label></li>
+<li><label><input type="checkbox"><strong>Random Mode:</strong> A “survival” mode that uses the <strong>TRNG</strong> (True Random Number Generator) peripheral to auto-generate an endless stream of notes.</label></li>
+<li><label><input type="checkbox"><strong>Input Detection:</strong> Four piezo sensors captured by the FPGA with sub-microsecond precision.</label></li>
+<li><label><input type="checkbox"><strong>Latency Budget:</strong> End-to-end pad hit (FPGA) to MCU-read and scoring &lt;1 ms.</label></li>
+<li><label><input type="checkbox"><strong>Scoring Windows:</strong> Perfect ±35 ms, Good ±75 ms, Miss &gt;±120 ms.</label></li>
+<li><label><input type="checkbox"><strong>Visual Features:</strong> Four color-coded lanes, falling notes, combo counter, and hit flash overlay on the TFT.</label></li>
+<li><label><input type="checkbox"><strong>Memory Reading:</strong> Reads music files, saves beatmaps, and reads/writes a persistent high-score leaderboard from an SD card using <strong>FatFs</strong>.</label></li>
 <li><label><input type="checkbox"><strong>Target Success Criteria:</strong> Smooth visuals, accurate scoring, synchronized audio, and a full playable song with consistent performance.</label></li>
 </ul>
 </section>
 <section id="microcontroller-integration" class="level3">
 <h3 class="anchored" data-anchor-id="microcontroller-integration">Microcontroller Integration</h3>
-<p>The Nucleo-L432 provides a 1 kHz timer (or SysTick) to maintain song timing as the single time source for the entire system. It owns the visual data, schedules playback, and sends time stamp signals to the FPGA at video cadence so rendering stays phase-locked to audio. Four piezo disks mounted under pads feed simple analog front-ends. The MCU uses either the ADC analog watchdog or a comparator to raise an interrupt on being hit. We will then apply a short window of grace (about 20-30 ms) and a short signal hold to debounce a potentially buggy signal and get the fastest timestamp.</p>
-<p>For audio there are two options. Option A (preferred) uses a DFPlayer Mini on UART 9600 to play MP3 from microSD; the MCU controls transport and maintains time from its own timer so that audio and visuals share the same master clock. Option B (fallback) generates PCM on the MCU with timer-DMA into a PWM or DAC output, lightly filtered and amplified to a small speaker. In either case the MCU also manages Start/Select/Pause buttons via EXTI GPIO and streams chart data to the FPGA prior to play. This combination of ADC watchdog/comparator interrupts, deterministic SPI scheduling tied to a master clock, and external audio control is beyond prior labs.</p>
+<p>The Nucleo-L432 provides the master clock (SysTick) for the entire system. It is responsible for all major logic. First, it implements a <strong>FAT file system</strong> (FatFs) to read <code>.wav</code> files from an SD card. In an “analysis” phase, it runs the <strong>CMSIS-DSP library’s FFT</strong> functions on the audio data to detect energy spikes in low/mid/high frequency bins, which it translates into a beatmap file (e.g., bass=pad1, snare=pad2) and saves back to the SD card. Second, during gameplay, it reads the <code>.wav</code> file again, streaming it via <strong>I2S and DMA</strong> to an external DAC for high-quality audio. Third, it simultaneously reads the generated beatmap and drives the game visuals (note highway, score) to an <strong>SPI TFT display</strong>. Fourth, it implements a “survival mode” using the <strong>TRNG</strong> peripheral to generate an unpredictable note stream. Finally, it runs the game logic, reading hit timestamps from the FPGA’s FIFO over SPI and comparing them to the master clock to determine score (Perfect/Good/Miss). This combination of DSP libraries, I2S+DMA, TRNG, and FatFs is well beyond prior labs.</p>
 </section>
 <section id="fpga-integration" class="level3">
 <h3 class="anchored" data-anchor-id="fpga-integration">FPGA Integration</h3>
-<p>On the iCE40UP5K the video pipeline uses standard 640×480p60 timing derived from an internal PLL running a ~25.2 MHz pixel clock. Horizontal and vertical counters generate pixel coordinates during the active region. Rather than allocate a full framebuffer, the renderer is a streaming compositor: for each pixel it decides which lane it falls into and whether a note sprite should be shown at that (x, y) based on the song time. A small BRAM region holds compact note tuples (drum number, time of hit) that are preloaded from the MCU before play. A separate palette/glyph LUT stores 1-bit masks for note hit flashes, and simple HUD glyphs. The mapping from scheduled onset to screen position is y = y0 + v · (sont time − hit time), where the scroll rate v is set by the chart header. A dedicated scoring core in the FPGA receives hit events from the MCU (lane and timestamp) and compares them to the nearest scheduled onset using fixed thresholds (for example ±35 ms Perfect, ±75 ms Good, Miss beyond ±120 ms). It updates combo and score, which the renderer overlays as HUD elements. The SPI slave on the FPGA parses four message types from the MCU: an INIT_HDR that carries BPM/scroll and palette parameters; NOTE_CHUNK blocks that populate BRAM; a periodic TIME_BEACON (about every 16.7 ms) that sets the authoritative song_time_ms; and immediate HIT_EVENT packets as pad interrupts occur. Video drives a simple binary-weighted 4-bit R/G/B DAC per color plus HSYNC/VSYNC to a VGA connector. This combination of a streaming sprite/LUT compositor, protocol parsing, and VGA timing extends well beyond what was covered in labs.</p>
-<p>I believe whichever screen we use, reading images and making some graphic, then synchronizing it with some song will the riskest element of our design.</p>
+<p>The iCE40UP5K is used as a <strong>high-speed, parallel I/O accelerator</strong>. Its sole task is to solve the problem of missed inputs. The four piezo drum pads (after passing through a simple comparator circuit) feed into the FPGA. The FPGA implements four <strong>high-precision timestamping modules</strong> in hardware. When a pad is hit, the FPGA captures the <em>exact</em> time of the rising edge (relative to its own clock) and stores this hit event (e.g., 4-bits for “lane” + 32-bits for “time”) into a <strong>hardware FIFO (First-In, First-Out) buffer</strong>. The MCU can then read from this FIFO over SPI at its own leisure (e.g., once per game loop). This design completely decouples the MCU’s main logic from the time-critical, nanosecond-precision task of input capture. This I/O co-processing, timestamping, and FIFO buffering is a new application of the FPGA.</p>
+<p>I believe the <strong>beat-detection algorithm</strong> will be the riskiest element of our design; tuning the FFT and onset detection to create a “fun” and accurate beatmap from an arbitrary song is a significant DSP challenge.</p>
 </section>
 <section id="calculations" class="level3">
 <h3 class="anchored" data-anchor-id="calculations">Calculations</h3>
-<p>Video timing. 640×480 active pixels at <span class="math inline">\(\approx 60\)</span> Hz uses a <span class="math inline">\(\approx 25.2\)</span> MHz pixel clock. The streaming compositor removes the need for a full framebuffer; BRAM only stores glyphs and a compact note list. Scroll mapping. At 60 FPS each frame advances by 16.67 ms. If we want a note to travel 360 px in 2000 ms, the scroll rate is <span class="math inline">\(v = \frac{360}{2000} = \frac{0.18 px}{ms}\)</span>, so the per-frame step is <span class="math inline">\(\Delta y \approx 3\)</span> px. SPI bandwidth. Preloading a chart of about 1200 notes with 5 bytes per tuple is ~6 KB, transmitted before the song. Runtime traffic is minimal: a TIME_BEACON every frame (~60 Hz) with a few bytes and HIT_EVENTs as the player strikes. An 8–12 MHz SPI clock provides wide margin. Latency budget. Pad analog to interrupt is typically under 100 µs; packaging and SPI transmission are about 50–150 µs; the FPGA overlays judgment on the next frame (<span class="math inline">\(\le\)</span> 16.7 ms). End-to-end feedback is therefore comfortably under 10 ms typical, leaving ample room for Perfect/Good windows at <span class="math inline">\(\pm 35/ \pm 75\)</span> ms. Power and levels. Logic runs at 3.3 V; audio/DFPlayer at 5 V with a common ground. Each VGA color channel is limited to ~0.7 Vpp into 75 <span class="math inline">\(\Omega\)</span> using a 4-bit resistor ladder with 1% tolerance and a 75 Ω series resistor per channel. No FFT processing is required in this design; key performance determinants are video timing, serial bandwidth, interrupt timing, and end-to-end latency.</p>
+<p><strong>FFT Analysis.</strong> Using the CMSIS-DSP library, a 1024-point real FFT on the Cortex-M4 (with FPU) is highly optimized. Analyzing a full 3-minute, 44.1kHz song will be an “offline” process (e.g., 10-15 seconds) shown on a loading screen. <strong>Scroll mapping.</strong> At 30 FPS each frame advances by 33.3 ms. If we want a note to travel 240 px in 1500 ms, the scroll rate is <span class="math inline">\(v = \frac{240}{1500} = \frac{0.16 px}{ms}\)</span>, so the per-frame step is <span class="math inline">\(\Delta y \approx 5\)</span> px. <strong>SPI bandwidth.</strong> Preloading a beatmap (~10-20 KB) is fast. Runtime traffic is minimal: the MCU just needs to send a “read” command to the FPGA’s FIFO over SPI, which can run at 8–12 MHz. <strong>Latency budget.</strong> Pad analog to digital logic &lt; 100 µs; FPGA capture-to-FIFO &lt; 1 µs. MCU SPI read to game logic &lt; 100 µs. The end-to-end <em>detection</em> latency is well under 1 ms. The visual feedback is limited only by the TFT’s refresh rate (33 ms). This leaves ample room for scoring windows at <span class="math inline">\(\pm 35/ \pm 75\)</span> ms. <strong>Power and levels.</strong> Logic runs at 3.3 V; I2S DAC and audio at 3.3 V or 5 V with a common ground.</p>
 </section>
 <section id="bill-of-materials-budget" class="level3">
 <h3 class="anchored" data-anchor-id="bill-of-materials-budget">Bill of Materials / Budget</h3>
@@ -275,12 +269,12 @@ window.Quarto = {
 <td>Drum sensors ($1.00 each)</td>
 </tr>
 <tr class="even">
-<td>Schottky diodes</td>
-<td>BAT54 or similar</td>
-<td>4</td>
+<td>Comparator (optional)</td>
+<td>LM393 or similar</td>
+<td>2-4</td>
 <td></td>
-<td>$7.00</td>
-<td>Clamp to rails</td>
+<td>$2.00</td>
+<td>Signal conditioning for FPGA</td>
 </tr>
 <tr class="odd">
 <td>AFE passives</td>
@@ -299,44 +293,28 @@ window.Quarto = {
 <td>Start / Select / Pause</td>
 </tr>
 <tr class="odd">
-<td>DFPlayer Mini</td>
-<td>YX5200-24SS module</td>
+<td><strong>I2S DAC Module</strong></td>
+<td><strong>MAX98357A</strong> or PCM5102</td>
 <td>1</td>
 <td></td>
-<td>$6.00</td>
-<td>Audio output</td>
+<td>$7.00</td>
+<td>Audio output (New)</td>
 </tr>
 <tr class="even">
-<td>microSD card</td>
-<td>≥1 GB</td>
-<td>1</td>
-<td>Stockroom</td>
-<td>$0.00</td>
-<td>For DFPlayer</td>
-</tr>
-<tr class="odd">
-<td>Audio amplifier</td>
-<td>PAM8403 module</td>
+<td><strong>microSD Card Module</strong></td>
+<td>e.g., Adafruit 254</td>
 <td>1</td>
 <td></td>
-<td>$2.00</td>
-<td>3 W class-D</td>
-</tr>
-<tr class="even">
-<td>Speaker</td>
-<td>8 Ω 0.5–3 W</td>
-<td>1</td>
-<td></td>
-<td>$2.00</td>
-<td>Audio output</td>
+<td>$5.00</td>
+<td>Music/Beatmap/Leaderboard (New)</td>
 </tr>
 <tr class="odd">
-<td>VGA DAC resistors</td>
-<td>1 % sets: 1k, 2k, 4k, 8k + 75 Ω series</td>
-<td>12</td>
-<td>Stockroom</td>
-<td>$0.00</td>
-<td>4-bit per color</td>
+<td><strong>SPI TFT Display</strong></td>
+<td><strong>2.8” ILI9341</strong> (320x240)</td>
+<td>1</td>
+<td></td>
+<td>$15.00</td>
+<td>Game Display (New)</td>
 </tr>
 <tr class="even">
 <td>Perfboard / wiring</td>
@@ -344,7 +322,7 @@ window.Quarto = {
 <td>—</td>
 <td>Stockroom</td>
 <td>$0.00</td>
-<td>Interconnects, DAC</td>
+<td>Interconnects</td>
 </tr>
 <tr class="odd">
 <td>Enclosure materials</td>
@@ -356,56 +334,9 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p><strong>Subtotal (purchased items): $21.00</strong></p>
-<section id="display-output-options-choose-one" class="level4">
-<h4 class="anchored" data-anchor-id="display-output-options-choose-one"><strong>Display / Output Options (choose one)</strong></h4>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Item</th>
-<th>Part / ID</th>
-<th>Qty</th>
-<th>Source</th>
-<th>Est. Price</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>VGA monitor + cable</td>
-<td>—</td>
-<td>1</td>
-<td>Stockroom</td>
-<td>$0.00</td>
-<td>Any VGA display</td>
-</tr>
-<tr class="even">
-<td><a href="https://www.adafruit.com/product/607">LED Matrix</a></td>
-<td>0607</td>
-<td>1</td>
-<td>Adafruit</td>
-<td>$30.00</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td><a href="https://www.digikey.com/en/products/detail/adafruit-industries-llc/1680/10670023">LCD Screen</a></td>
-<td>1680</td>
-<td>1</td>
-<td>Digikey</td>
-<td>$27.50</td>
-<td></td>
-</tr>
-<tr class="even">
-<td>Fan Display: Motor + <a href="https://www.adafruit.com/product/2328">LED strip</a></td>
-<td>2328</td>
-<td>1</td>
-<td>Adafruit</td>
-<td>$25.00</td>
-<td>Motor from stockroom</td>
-</tr>
-</tbody>
-</table>
-</section>
+<p><strong>Subtotal (purchased items): $33.00</strong></p>
+<p><em>(This total is well within the $50 budget.)</em></p>
+<hr>
 </section>
 <section id="project-timeline-weeks-815" class="level3">
 <h3 class="anchored" data-anchor-id="project-timeline-weeks-815">Project Timeline — Weeks 8–15</h3>
@@ -432,42 +363,42 @@ window.Quarto = {
 <td>Oct 20</td>
 <td>AES Lecture &amp; FPGA Workshop</td>
 <td><a href="https://hmc-e155.github.io/lab/lab6/">Lab 6</a></td>
-<td>Model and test one piezo AFE channel on a breadboard. (A) Implement basic VGA timing generator on FPGA. (S)</td>
+<td>(A) MCU: Play audio from SD card via I2S+DMA. (S) FPGA: Implement piezo hit capture &amp; FIFO.</td>
 </tr>
 <tr class="odd">
 <td><strong>10</strong></td>
 <td>Oct 27</td>
 <td>Graphics, Displays, Motors &amp; Speakers</td>
 <td><a href="https://hmc-e155.github.io/lab/lab7/">Lab 7</a></td>
-<td>Write MCU code to read one pad and send hits via SPI. (A) Render a single static lane and a movable sprite on the VGA output. (S)</td>
+<td>(A) MCU: Drive TFT display. Read hit timestamps from FPGA over SPI. (S) Integrate piezo-to-FPGA path.</td>
 </tr>
 <tr class="even">
 <td><strong>11</strong></td>
 <td>Nov 3</td>
 <td>Design Review Presentations (T/Th)</td>
 <td>Design Review Presentation &amp; Memo</td>
-<td>Have working prototype model, have some pre-edited music samples</td>
+<td>Demo: Hitting a pad makes a sprite appear on the TFT, while music plays.</td>
 </tr>
 <tr class="odd">
 <td><strong>12</strong></td>
 <td>Nov 10</td>
 <td>Intro to RTOS; Direct Memory Access</td>
 <td>—</td>
-<td>3D Model some housing for entire design</td>
+<td>Develop v1.0 of offline FFT beat-detection (CMSIS-DSP) on MCU.</td>
 </tr>
 <tr class="even">
 <td><strong>13</strong></td>
 <td>Nov 17</td>
 <td>Project Status Report &amp; Demo; Connectors</td>
 <td>Project Status Reports &amp; Demo</td>
-<td>Demo working project to Prof.&nbsp;Spencer</td>
+<td>Demo working game with auto-generated beatmap and scoring.</td>
 </tr>
 <tr class="odd">
 <td><strong>14</strong></td>
 <td>Nov 24</td>
 <td>FFT Lecture; <strong>Thanksgiving — No Class (Th)</strong></td>
 <td>—</td>
-<td>Fix what’s broken, debugging</td>
+<td>Implement Leaderboard. Implement TRNG random mode. Debugging/tuning.</td>
 </tr>
 <tr class="even">
 <td><strong>15</strong></td>
@@ -481,40 +412,40 @@ window.Quarto = {
 </section>
 <section id="block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
-<figure style="flex:1 1 30%; text-align:center;" class="figure">
-<img src="images/blockdiagram.png" alt="Block Diagram" style="width:100%; border-radius:8px;" class="figure-img">
-<figcaption>
-Block Diagram
-</figcaption>
-</figure>
+<p><em>(The previous block diagram is no longer valid. This new architecture is as follows:)</em></p>
+<ol type="1">
+<li><strong>Inputs:</strong> Four <strong>Piezo Sensors</strong> connect to the <strong>FPGA</strong>.</li>
+<li><strong>FPGA (I/O Accelerator):</strong> The FPGA’s <strong>Hit Detection + FIFO</strong> module communicates over <strong>SPI</strong> to the <strong>MCU</strong>.</li>
+<li><strong>MCU (The Brain):</strong>
+<ul>
+<li>Reads/Writes to the <strong>SD Card Module</strong> (FatFs).</li>
+<li>Drives the <strong>SPI TFT Display</strong>.</li>
+<li>Streams audio to the <strong>I2S DAC Module</strong>.</li>
+<li>Uses <strong>TRNG</strong> and <strong>CMSIS-DSP</strong> libraries.</li>
+</ul></li>
+<li><strong>Outputs:</strong> The <strong>I2S DAC</strong> outputs to a speaker/headphones. The <strong>TFT</strong> displays the game.</li>
+</ol>
 </section>
 <section id="action-items" class="level3">
 <h3 class="anchored" data-anchor-id="action-items">Action Items</h3>
-<ul class="task-list">
-<li><label><input type="checkbox"><strong>Finalize Audio Path (MCU side)</strong> – Implement DFPlayer UART control and verify synchronization with system timer.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>Develop Pad Detection Circuit</strong> – Build and test piezo AFE and comparator/ADC interrupt response.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>SPI Communication Protocol</strong> – Define and implement INIT, NOTE_CHUNK, TIME_BEACON, and HIT_EVENT messages between MCU and FPGA.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>FPGA Video Pipeline</strong> – Implement 640×480 VGA timing, streaming compositor, and BRAM note storage.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>Scoring Logic</strong> – Design and verify time-window scoring (Perfect/Good/Miss) on FPGA.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>HUD &amp; Sprite Rendering</strong> – Create lane graphics, combo counter, and hit flash overlays.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>Mechanical Integration</strong> – Assemble four-pad drum enclosure with sensor mounts and wiring.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>System Integration Test</strong> – Synchronize audio, visuals, and pad timing; validate latency budget.<br>
-</label></li>
-<li><label><input type="checkbox"><strong>Final Debug and Polish</strong> – Tune thresholds, test multiple charts, and prepare final demo.</label></li>
+<ul>
+<li><label><input type="checkbox"><strong>Finalize Audio Path (MCU side)</strong> – Implement SD card (FatFs) file reading and I2S+DMA streaming of <code>.wav</code> files to the DAC.</label></li>
+<li><label><input type="checkbox"><strong>Develop Pad Detection (FPGA side)</strong> – Build piezo sensor circuit and implement FPGA hardware for hit timestamping and FIFO.</label></li>
+<li>[S] <strong>Implement Beat-Detection (MCU side)</strong> – Integrate CMSIS-DSP library and develop an FFT-based algorithm to auto-generate beatmaps.</li>
+<li><label><input type="checkbox"><strong>SPI Communication Protocol</strong> – Define and implement the simple “read from FIFO” SPI protocol.</label></li>
+<li><label><input type="checkbox"><strong>Game Logic (MCU side)</strong> – Develop the game loop, scoring logic, and leaderboard system.</label></li>
+<li><label><input type="checkbox"><strong>Graphics (MCU side)</strong> – Write drivers for the SPI TFT to render the note highway, score, and hit flashes.</label></li>
+<li><label><input type="checkbox"><strong>TRNG Mode</strong> – Use the TRNG peripheral to create a “survival” or “random” game mode.</label></li>
+<li><label><input type="checkbox"><strong>Mechanical Integration</strong> – Assemble four-pad drum enclosure.</label></li>
+<li><label><input type="checkbox"><strong>System Integration Test</strong> – Synchronize audio, visuals, and pad timing; validate scoring.</label></li>
+<li><label><input type="checkbox"><strong>Final Debug and Polish</strong> – Tune FFT algorithm, scoring windows, and prepare final demo.</label></li>
 </ul>
 </section>
 <section id="task-division" class="level3">
 <h3 class="anchored" data-anchor-id="task-division">Task Division</h3>
 <ul>
-<li><strong>Abe:</strong> MCU code (drum sensing, audio integration), Scoring logic, Mechanical design (drum pad housing, sensor mounting)</li>
-<li><strong>Santiago:</strong> MCU code (timing, SPI protocol), FPGA graphics pipeline, VGA output,</li>
+<li><strong>Abe:</strong> MCU code (FFT/Beat-detection, game logic, scoring, TRNG mode), Mechanical design (drum pad housing)</li>
+<li><strong>Santiago:</strong> MCU code (I2S+DMA audio, SD Card/FatFs, SPI protocol, TFT display driver), FPGA logic (Hit capture, timestamp, FIFO)</li>
 <li><strong>All Members:</strong> Debugging, documentation, and final presentation</li>
 </ul>
 
