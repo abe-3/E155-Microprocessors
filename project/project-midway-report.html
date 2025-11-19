@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Project Proposal – E155 Portfolio</title>
+<title>Project Midway Report – E155 Portfolio</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -156,14 +127,10 @@ window.Quarto = {
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#specifications" id="toc-specifications" class="nav-link" data-scroll-target="#specifications">Specifications</a></li>
-  <li><a href="#microcontroller-integration" id="toc-microcontroller-integration" class="nav-link" data-scroll-target="#microcontroller-integration">Microcontroller Integration</a></li>
-  <li><a href="#fpga-integration" id="toc-fpga-integration" class="nav-link" data-scroll-target="#fpga-integration">FPGA Integration</a></li>
-  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations">Calculations</a></li>
-  <li><a href="#bill-of-materials-budget" id="toc-bill-of-materials-budget" class="nav-link" data-scroll-target="#bill-of-materials-budget">Bill of Materials / Budget</a></li>
-  <li><a href="#project-timeline-weeks-815" id="toc-project-timeline-weeks-815" class="nav-link" data-scroll-target="#project-timeline-weeks-815">Project Timeline — Weeks 8–15</a></li>
   <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
-  <li><a href="#action-items" id="toc-action-items" class="nav-link" data-scroll-target="#action-items">Action Items</a></li>
-  <li><a href="#task-division" id="toc-task-division" class="nav-link" data-scroll-target="#task-division">Task Division</a></li>
+  <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
+  <li><a href="#verification" id="toc-verification" class="nav-link" data-scroll-target="#verification">Verification</a></li>
+  <li><a href="#status" id="toc-status" class="nav-link" data-scroll-target="#status">Status</a></li>
   </ul>
 </nav>
     </div>
@@ -172,7 +139,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Project Proposal</h1>
+<h1 class="title">Project Midway Report</h1>
 </div>
 
 
@@ -192,7 +159,6 @@ window.Quarto = {
 <section id="overview" class="level3">
 <h3 class="anchored" data-anchor-id="overview">Overview</h3>
 <p>DDRUM is a four-pad rhythm game in the spirit of DDR and Guitar Hero. Notes descend in four lanes on a display while a song plays. The player strikes one of four drum pads on the beat, and the system scores accuracy as Perfect, Good, or Miss with real-time visual feedback and a running score/combo.</p>
-<p>The STM32L432 (Nucleo-L432KCU) acts as the central brain and system coordinator: it reads <code>.wav</code> files from an SD card, performs an <strong>offline FFT-based beat-detection analysis</strong> (using the <strong>CMSIS-DSP</strong> library) to auto-generate a beatmap, streams audio via <strong>I2S+DMA</strong> to a DAC, and drives the <strong>LED Matrix</strong>. The iCE40UP5K (UPduino v3.1) FPGA acts as a <strong>high-precision I/O accelerator</strong>: it captures drum pad hits with nanosecond accuracy, timestamps them, and stores them in a <strong>FIFO</strong> for the MCU to read. The result is a responsive, low-latency game that cleanly divides responsibilities: MCU for all logic, audio, and graphics; FPGA for time-critical hit detection. Success is defined as smooth 30+ FPS visuals on the Matrix, consistent audio-visual synchronization, accurate beat-detection on at least one song, consistent and accurate pad detection via the FPGA, and a real-time scoring system with a leaderboard. The design uses both the MCU and FPGA in roles beyond prior labs and introduces non-trivial new hardware: an I2S DAC, piezo sensor inputs, and an SD card reader.</p>
 </section>
 <section id="specifications" class="level3">
 <h3 class="anchored" data-anchor-id="specifications">Specifications</h3>
@@ -203,247 +169,89 @@ window.Quarto = {
 <li><label><input type="checkbox"><strong>Memory Reading:</strong> Reads music files, premade beatmaps, and reads/writes a persistent high-score leaderboard from an SD card using <strong>FatFs</strong>.</label></li>
 <li><label><input type="checkbox"><strong>Synchronization:</strong> Smooth visuals, accurate scoring, synchronized audio, and a full playable song with consistent performance.</label></li>
 <li><label><input type="checkbox"><strong>Reach Goal:</strong> Random Mode: 3 Game modes that vary on difficulty, selecting all bass notes randomly</label></li>
-<li><label><input type="checkbox"><strong>Reach Goal:</strong> Audio Analysis: Successful beat-detection using FFT</label></li>
+<li><label><input type="checkbox"><strong>Reach Goal:</strong> Audio Analysis: Successful beat-detection using MIDI File Read</label></li>
 </ul>
-</section>
-<section id="microcontroller-integration" class="level3">
-<h3 class="anchored" data-anchor-id="microcontroller-integration">Microcontroller Integration</h3>
-<p>The Nucleo-L432 provides the master clock (SysTick) for the entire system. It is responsible for all major logic. First, it implements a <strong>FAT file system</strong> (FatFs) to read <code>.wav</code> files from an SD card. In an “analysis” phase, it runs the <strong>CMSIS-DSP library’s FFT</strong> functions on the audio data to detect energy spikes in low/mid/high frequency bins, which it translates into a beatmap file (e.g., bass=pad1, snare=pad2) and saves back to the SD card. Second, during gameplay, it reads the <code>.wav</code> file again, streaming it via <strong>I2S and DMA</strong> to an external DAC for high-quality audio. Third, it simultaneously reads the generated beatmap and drives the game visuals (note highway, score) to an <strong>SPI LED Matrix display</strong>. Fourth, it implements a “survival mode” using the <strong>TRNG</strong> peripheral to generate an unpredictable note stream. Finally, it runs the game logic, reading hit timestamps from the FPGA’s FIFO over SPI and comparing them to the master clock to determine score (Perfect/Good/Miss). This combination of DSP libraries, I2S+DMA, TRNG, and FatFs is well beyond prior labs.</p>
-</section>
-<section id="fpga-integration" class="level3">
-<h3 class="anchored" data-anchor-id="fpga-integration">FPGA Integration</h3>
-<p>The iCE40UP5K is used as a <strong>high-speed, parallel I/O accelerator</strong>. Its sole task is to solve the problem of missed inputs. The four piezo drum pads (after passing through a simple comparator circuit) feed into the FPGA. The FPGA implements four <strong>high-precision timestamping modules</strong> in hardware. When a pad is hit, the FPGA captures the <em>exact</em> time of the rising edge (relative to its own clock) and stores this hit event (e.g., 4-bits for “lane” + 32-bits for “time”) into a <strong>hardware FIFO (First-In, First-Out) buffer</strong>. The MCU can then read from this FIFO over SPI at its own leisure (e.g., once per game loop). This design completely decouples the MCU’s main logic from the time-critical, nanosecond-precision task of input capture. This I/O co-processing, timestamping, and FIFO buffering is a new application of the FPGA.</p>
-<p>I believe the <strong>beat-detection algorithm</strong> will be the riskiest element of our design; tuning the FFT and onset detection to create a “fun” and accurate beatmap from an arbitrary song is a significant DSP challenge.</p>
-</section>
-<section id="calculations" class="level3">
-<h3 class="anchored" data-anchor-id="calculations">Calculations</h3>
-<p><strong>FFT Analysis.</strong> Using the CMSIS-DSP library, a 1024-point real FFT on the Cortex-M4 (with FPU) is highly optimized. Analyzing a full 3-minute, 44.1kHz song will be an “offline” process (e.g., 10-15 seconds) shown on a loading screen. <strong>Scroll mapping.</strong> At 30 FPS each frame advances by 33.3 ms. If we want a note to travel 240 px in 1500 ms, the scroll rate is <span class="math inline">\(v = \frac{240}{1500} = \frac{0.16 px}{ms}\)</span>, so the per-frame step is <span class="math inline">\(\Delta y \approx 5\)</span> px. <strong>SPI bandwidth.</strong> Preloading a beatmap (~10-20 KB) is fast. Runtime traffic is minimal: the MCU just needs to send a “read” command to the FPGA’s FIFO over SPI, which can run at 8–12 MHz. <strong>Latency budget.</strong> Pad analog to digital logic &lt; 100 µs; FPGA capture-to-FIFO &lt; 1 µs. MCU SPI read to game logic &lt; 100 µs. The end-to-end <em>detection</em> latency is well under 1 ms. The visual feedback is limited only by the LED Matrix’s refresh rate (33 ms). This leaves ample room for scoring windows at <span class="math inline">\(\pm 35/ \pm 75\)</span> ms. <strong>Power and levels.</strong> Logic runs at 3.3 V; I2S DAC and audio at 3.3 V or 5 V with a common ground.</p>
-</section>
-<section id="bill-of-materials-budget" class="level3">
-<h3 class="anchored" data-anchor-id="bill-of-materials-budget">Bill of Materials / Budget</h3>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-<col style="width: 16%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Item</th>
-<th>Part / ID</th>
-<th>Qty</th>
-<th>Source</th>
-<th>Est. Price</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>FPGA board</strong></td>
-<td>UPduino v3.1 (iCE40UP5K)</td>
-<td>1</td>
-<td>Provided</td>
-<td>$0.00</td>
-<td></td>
-</tr>
-<tr class="even">
-<td><strong>MCU board</strong></td>
-<td>Nucleo-L432KCU (STM32L432KC)</td>
-<td>1</td>
-<td>Provided</td>
-<td>$0.00</td>
-<td></td>
-</tr>
-<tr class="odd">
-<td>Piezo discs (27–35 mm)</td>
-<td>e.g., ABT-402-RP or generic</td>
-<td>4</td>
-<td></td>
-<td>$4.00</td>
-<td>Drum sensors ($1.00 each)</td>
-</tr>
-<tr class="even">
-<td>Comparator (optional)</td>
-<td>LM393 or similar</td>
-<td>2-4</td>
-<td></td>
-<td>$2.00</td>
-<td>Signal conditioning for FPGA</td>
-</tr>
-<tr class="odd">
-<td>AFE passives</td>
-<td>10k/100k resistors, 100 nF caps (1%)</td>
-<td>set</td>
-<td>Stockroom</td>
-<td>$0.00</td>
-<td>Divider / RC</td>
-</tr>
-<tr class="even">
-<td>Momentary buttons</td>
-<td>12 mm tactiles</td>
-<td>3</td>
-<td>Stockroom</td>
-<td>$0.00</td>
-<td>Start / Select / Pause</td>
-</tr>
-<tr class="odd">
-<td><strong>I2S DAC Module</strong></td>
-<td><strong>MAX98357A</strong> or PCM5102</td>
-<td>1</td>
-<td></td>
-<td>$7.00</td>
-<td>Audio output (New)</td>
-</tr>
-<tr class="even">
-<td><strong>microSD Card Module</strong></td>
-<td>e.g., Adafruit 254</td>
-<td>1</td>
-<td></td>
-<td>$5.00</td>
-<td>Music/Beatmap/Leaderboard (New)</td>
-</tr>
-<tr class="odd">
-<td><strong>LED Matrix Display</strong></td>
-<td><strong>2.8” ILI9341</strong> (320x240)</td>
-<td>1</td>
-<td></td>
-<td>$15.00</td>
-<td>Game Display (New)</td>
-</tr>
-<tr class="even">
-<td>Perfboard / wiring</td>
-<td>—</td>
-<td>—</td>
-<td>Stockroom</td>
-<td>$0.00</td>
-<td>Interconnects</td>
-</tr>
-<tr class="odd">
-<td>Enclosure materials</td>
-<td>—</td>
-<td>—</td>
-<td>Makerspace</td>
-<td>$0.00</td>
-<td>Plywood + 3D printer filament</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Subtotal (purchased items): $33.00</strong></p>
-<p><em>(This total is well within the $50 budget.)</em></p>
-<hr>
-</section>
-<section id="project-timeline-weeks-815" class="level3">
-<h3 class="anchored" data-anchor-id="project-timeline-weeks-815">Project Timeline — Weeks 8–15</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Week</th>
-<th>Date</th>
-<th>Scheduled Topics</th>
-<th>Deliverables</th>
-<th>Project Milestone</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>8</strong></td>
-<td>Oct 13</td>
-<td><strong>Fall Break — No Class</strong>; Proposal Debriefs</td>
-<td><a href="https://hmc-e155.github.io/project/">Project Proposal</a></td>
-<td>—</td>
-</tr>
-<tr class="even">
-<td><strong>9</strong></td>
-<td>Oct 20</td>
-<td>AES Lecture &amp; FPGA Workshop</td>
-<td><a href="https://hmc-e155.github.io/lab/lab6/">Lab 6</a></td>
-<td>(A) MCU: Play audio from SD card via I2S+DMA. (S) FPGA: Implement piezo hit capture &amp; FIFO.</td>
-</tr>
-<tr class="odd">
-<td><strong>10</strong></td>
-<td>Oct 27</td>
-<td>Graphics, Displays, Motors &amp; Speakers</td>
-<td><a href="https://hmc-e155.github.io/lab/lab7/">Lab 7</a></td>
-<td>(A) MCU: Drive LED Matrix display. Read hit timestamps from FPGA over SPI. (S) Integrate piezo-to-FPGA path.</td>
-</tr>
-<tr class="even">
-<td><strong>11</strong></td>
-<td>Nov 3</td>
-<td>Design Review Presentations (T/Th)</td>
-<td>Design Review Presentation &amp; Memo</td>
-<td>Demo: Hitting a pad makes a sprite appear on the LED Matrix, while music plays.</td>
-</tr>
-<tr class="odd">
-<td><strong>12</strong></td>
-<td>Nov 10</td>
-<td>Intro to RTOS; Direct Memory Access</td>
-<td>—</td>
-<td>Develop v1.0 of offline FFT beat-detection (CMSIS-DSP) on MCU.</td>
-</tr>
-<tr class="even">
-<td><strong>13</strong></td>
-<td>Nov 17</td>
-<td>Project Status Report &amp; Demo; Connectors</td>
-<td>Project Status Reports &amp; Demo</td>
-<td>Demo working game with auto-generated beatmap and scoring.</td>
-</tr>
-<tr class="odd">
-<td><strong>14</strong></td>
-<td>Nov 24</td>
-<td>FFT Lecture; <strong>Thanksgiving — No Class (Th)</strong></td>
-<td>—</td>
-<td>Implement Leaderboard. Implement TRNG random mode. Debugging/tuning.</td>
-</tr>
-<tr class="even">
-<td><strong>15</strong></td>
-<td>Dec 4</td>
-<td>Digital Signal Processing; Special Topics / Guest Lecture</td>
-<td>Project Checkoffs, Report, Demo Day</td>
-<td><strong>Win or Die</strong></td>
-</tr>
-</tbody>
-</table>
 </section>
 <section id="block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
-<p><em>(The previous block diagram is no longer valid. This new architecture is as follows:)</em></p>
-<ol type="1">
-<li><strong>Inputs:</strong> Four <strong>Piezo Sensors</strong> connect to the <strong>FPGA</strong>.</li>
-<li><strong>FPGA (I/O Accelerator):</strong> The FPGA’s <strong>Hit Detection + FIFO</strong> module communicates over <strong>SPI</strong> to the <strong>MCU</strong>.</li>
-<li><strong>MCU (The Brain):</strong>
+<figure style="flex:1 1 40%; text-align:center;" class="figure">
+<img src="images/block_diagram.png" alt="Block Diagram" style="max-height:300px; width:auto; border-radius:8px;" class="figure-img">
+<figcaption>
+Block Diagram
+</figcaption>
+</figure>
+</section>
+<section id="schematic" class="level3">
+<h3 class="anchored" data-anchor-id="schematic">Schematic</h3>
+<figure style="flex:1 1 40%; text-align:center;" class="figure">
+<img src="images/schem-ledmatrix.jpeg" alt="LED Matrix Schematic" style="max-height:300px; width:auto; border-radius:8px;" class="figure-img">
+<figcaption>
+LED Matrix Schematic
+</figcaption>
+</figure>
+<figure style="flex:1 1 40%; text-align:center;" class="figure">
+<img src="images/schem-speaker.jpeg" alt="Audio Amplifier Schematic" style="max-height:300px; width:auto; border-radius:8px;" class="figure-img">
+<figcaption>
+Audio Amplifier Schematic
+</figcaption>
+</figure>
+</section>
+<section id="verification" class="level3">
+<h3 class="anchored" data-anchor-id="verification">Verification</h3>
+<figure style="flex:1 1 40%; text-align:center;" class="figure">
+<img src="images/dd_waves.png" alt="Display Driver Waveforms" style="max-height:300px; width:auto; border-radius:8px;" class="figure-img">
+<figcaption>
+Display Driver Waveforms
+</figcaption>
+</figure>
+<figure style="flex:1 1 40%; text-align:center;" class="figure">
+<img src="images/dm_waves.png" alt="Display Memory Waveforms" style="max-height:300px; width:auto; border-radius:8px;" class="figure-img">
+<figcaption>
+Display Memory Waveforms
+</figcaption>
+</figure>
+<figure style="flex:1 1 40%; text-align:center;" class="figure">
+<img src="images/spi_receiver_waves.png" alt="SPI Reciever Waves" style="max-height:300px; width:auto; border-radius:8px;" class="figure-img">
+<figcaption>
+SPI Reciever Waves
+</figcaption>
+</figure>
+</section>
+<section id="status" class="level3">
+<h3 class="anchored" data-anchor-id="status">Status</h3>
 <ul>
-<li>Reads/Writes to the <strong>SD Card Module</strong> (Fat32).</li>
-<li>Drives the <strong>SPI LED Matrix Display</strong>.</li>
-<li>Streams audio to the <strong>I2S DAC Module</strong>.</li>
-<li>Uses <strong>TRNG</strong> and <strong>CMSIS-DSP</strong> libraries.</li>
+<li>Microcontroller
+<ul>
+<li>Read from SD Card via SPI
+<ul>
+<li>Done</li>
 </ul></li>
-<li><strong>Outputs:</strong> The <strong>I2S DAC</strong> outputs to a speaker/headphones. The <strong>LED Matrix</strong> displays the game.</li>
-</ol>
-</section>
-<section id="action-items" class="level3">
-<h3 class="anchored" data-anchor-id="action-items">Action Items</h3>
+<li>Play music from the DAC
 <ul>
-<li><label><input type="checkbox"><strong>Finalize Audio Path (MCU side)</strong> – Implement SD card (FatFs) file reading and I2S+DMA streaming of <code>.wav</code> files to the DAC.</label></li>
-<li><label><input type="checkbox"><strong>Develop Pad Detection (FPGA side)</strong> – Build piezo sensor circuit and implement FPGA hardware for hit timestamping and FIFO.</label></li>
-<li>[S] <strong>Implement Beat-Detection (MCU side)</strong> – Integrate CMSIS-DSP library and develop an FFT-based algorithm to auto-generate beatmaps.</li>
-<li><label><input type="checkbox"><strong>SPI Communication Protocol</strong> – Define and implement the simple “read from FIFO” SPI protocol.</label></li>
-<li><label><input type="checkbox"><strong>Game Logic (MCU side)</strong> – Develop the game loop, scoring logic, and leaderboard system.</label></li>
-<li><label><input type="checkbox"><strong>Graphics (MCU side)</strong> – Write drivers for the SPI LED Matrix to render the note highway, score, and hit flashes.</label></li>
-<li><label><input type="checkbox"><strong>TRNG Mode</strong> – Use the TRNG peripheral to create a “survival” or “random” game mode.</label></li>
-<li><label><input type="checkbox"><strong>Mechanical Integration</strong> – Assemble four-pad drum enclosure.</label></li>
-<li><label><input type="checkbox"><strong>System Integration Test</strong> – Synchronize audio, visuals, and pad timing; validate scoring.</label></li>
-<li><label><input type="checkbox"><strong>Final Debug and Polish</strong> – Tune FFT algorithm, scoring windows, and prepare final demo.</label></li>
-</ul>
-</section>
-<section id="task-division" class="level3">
-<h3 class="anchored" data-anchor-id="task-division">Task Division</h3>
+<li>Very Buggy but sound does comes out</li>
+</ul></li>
+</ul></li>
+<li>FPGA
 <ul>
-<li><strong>Abe:</strong> MCU code (FFT/Beat-detection, game logic, scoring, TRNG mode), Mechanical design (drum pad housing)</li>
-<li><strong>Santiago:</strong> MCU code (I2S+DMA audio, SD Card/FatFs, SPI protocol, LED Matrix display driver), FPGA logic (Hit capture, timestamp, FIFO)</li>
-<li><strong>All Members:</strong> Debugging, documentation, and final presentation</li>
+<li>Control LED Matrix cleanly
+<ul>
+<li>Some Flickering Issues</li>
+<li>Can control colors</li>
+<li>Not yet started: Driving 4 separate lanes</li>
+</ul></li>
+</ul></li>
+<li>Communication
+<ul>
+<li>Interface between Controller and Peripherals</li>
+<li>MCU having multiple SPI peripherals</li>
+</ul></li>
+<li>Sensors
+<ul>
+<li>Read in inputs from piezoelectric sensors
+<ul>
+<li>Not Started</li>
+</ul></li>
+</ul></li>
 </ul>
 
 
