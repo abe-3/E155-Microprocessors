@@ -171,16 +171,21 @@ ul.task-list li input[type="checkbox"] {
 <section id="abstract-team" class="level2">
 <h2 class="anchored" data-anchor-id="abstract-team">1. Abstract &amp; Team</h2>
 <p><strong>Team Members:</strong> <strong>Abraham Rock:</strong> An Engineering student at Harvey Mudd College in the Class of 2027. His interests lie in digital electronics, embedded systems, and systems engineering. He is in the ASHMC Executive Board where he acts as this year’s Muddlife Director. - <a href="https://abe-3.github.io/E155-Microprocessors/">Portfolio</a></p>
-<p><strong>Santiago Burgos-Fallon:</strong> [Short Bio] - [Link to LinkedIn/Website]</p>
+<p><strong>Santiago Burgos-Fallon:</strong> A senior Engineering student at Harvey Mudd College. I love everything computers, from digital design and embedded systems to data analysis. This summer I worked at TSMC in Lithography Process Engineering, where I analyzed overlay relationships, tuned control systems, and pushed on design-for-manufacturability to improve chip yield and performance. Ive built practical digital systems including a 16 bit IEEE-754 FMA and a drone navigation project that fuses computer vision with ultra-wideband (UWB) positioning. - <a href="https://s4anti4go.github.io/E155/">Portfolio</a></p>
 <p><strong>Abstract:</strong> DDRUM is an embedded rhythm game system that integrates real-time audio processing, custom hardware inputs, and high-speed visual feedback. The system utilizes an STM32L432KC microcontroller for audio streaming, beat detection, and synchronization, reading uncompressed WAV files from an SD card and buffering them to create a precise “lookahead” mechanic. An iCE40UP5K FPGA acts as a parallel graphics accelerator, driving a 64x64 HUB75 LED matrix with 24-bit color via Binary Code Modulation (BCM) while simultaneously handling input from four custom piezoelectric drum pads with zero-latency debounce logic. By decoupling audio analysis from visual rendering across two distinct processors communicating via SPI, DDRUM achieves fluid, high-refresh rate visuals and accurate rhythm scoring without the overhead of an operating system.</p>
-<p><strong>Project Demonstration:</strong> [PLACEHOLDER: Video Link Here]</p>
+<p><strong>Project Demonstration:</strong> <iframe width="560" height="315" src="https://www.youtube.com/embed/gT5HPUfdJN4?si=6VV2e-pQJxyKznkK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe></p>
 </section>
 <section id="system-overview" class="level2">
 <h2 class="anchored" data-anchor-id="system-overview">2. System Overview</h2>
 <p>DDRUM is a four-pad rhythm game in the spirit of DDR and Guitar Hero. Notes descend in four lanes on a display while a song plays. The player strikes one of four drum pads on the beat, and the system scores accuracy as Perfect, Okay, or Miss with real-time visual feedback and a running score/combo.</p>
 <section id="high-level-block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="high-level-block-diagram">High Level Block Diagram</h3>
-<p>[PLACEHOLDER: Insert Block Diagram image here.]</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-images/bd.png" class="img-fluid figure-img"></p>
+<figcaption>Block Diagram</figcaption>
+</figure>
+</div>
 </section>
 </section>
 <section id="hardware-design-schematics" class="level2">
@@ -277,7 +282,25 @@ ul.task-list li input[type="checkbox"] {
 <p>For most rhythm games — including our own, a major part is displaying the beats from the song before they are played. Since we chose a fall time of 2 seconds for the visual logic on our FPGA, we needed to buffer the output by exactly 2 seconds to make the beat info sent to the FPGA match up. To do this, after reading in a sector, we analyze it immediately, save it into a circular RAM buffer, and then later use the DAC peripheral to play that audio cleanly.</p>
 <p>To determine what is a valid beat in the song, we considered analyzing the frequency of a chunk of the song via an FFT and considering low enough frequencies as bass/drum beats. However, we realized frequency analysis alone would not function well as real beats are a complex combination of frequency, volume, and transient attack, making it a challenge for even sophisticated neural networks. So we decided that to be more efficient and save us the time of implementing an FFT accelerator, we solely consider volume dynamics. We calculated the average volume of the song as we read it in via a simple integrator to track the running average of the song’s energy; if a sample’s amplitude spikes 20% higher than this average, we register it as a beat.</p>
 <p>Once a beat is identified, we communicate with the FPGA using the SPI peripheral. The FPGA shares the same SPI bus as the SD card but is addressed via a separate Chip Select pin. We simply assert the line, transmit a single-byte bitmask indicating the active lane, and de-assert the line.</p>
-<p><img src="final-images/FPGA_LA.png" class="img-fluid" alt="SPI FPGA Trace"> <em>Figure 4: SPI transaction sending beat mask from MCU to FPGA.</em></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><img src="final-images/LA_FPGA1.png" class="img-fluid" alt="2nd Lane Active"></th>
+<th style="text-align: center;"><img src="final-images/LA_FPGA2.png" class="img-fluid" alt="4th Lane Active"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><em>2nd Lane Active</em></td>
+<td style="text-align: center;"><em>4th Lane Active</em></td>
+</tr>
+</tbody>
+</table>
+<p><em>Figure 4: SPI transaction sending beat mask from MCU to FPGA.</em></p>
 <p>Finally, for the audio output, we use the DAC driven by a hardware timer (TIM6). We configure the timer to trigger an interrupt at the exact sample rate of the file. On every tick, the handler pulls the “oldest” byte from the tail of our circular buffer and writes it to the DAC output register, ensuring the audio plays smoothly and in perfect sync with the visuals we triggered 2 seconds prior.</p>
 </section>
 <section id="fpga-design" class="level2">
@@ -298,7 +321,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The final DDRUM system successfully met the timing and performance benchmarks required for a functional rhythm game. Visually, the HUB75 matrix driver running on the iCE40 FPGA achieved a smooth, tear-free refresh rate using Binary Code Modulation. The dedicated hardware driving logic ensured that note scrolling remained fluid and legible even when multiple lanes were active simultaneously.</p>
 <p>Audio synchronization—the most critical mechanic of the system—was maintained with high precision. The circular buffer implementation in the STM32 firmware provided exactly <strong>2.00 seconds</strong> of lookahead. This specific buffer depth allowed the beat detection algorithm sufficient time to analyze incoming audio sectors and transmit synchronization packets to the FPGA well before the corresponding audio was played through the DAC. This architecture resulted in accurate alignment between the visual “hit line” on the matrix and the audible beat from the speakers.</p>
 <p>To address the mechanical noise inherent to the custom 3D-printed drum pads, input processing was constrained by a hardware debouncer. We forced a <strong>10 ms</strong> debounce window on the piezoelectric signals to prevent the sensor’s “ringing” (mechanical vibration after impact) from registering as multiple hits. By processing these signals directly on the FPGA, we ensured that valid impacts were captured reliability while effectively filtering out noise without the variability of software-based polling.</p>
-<p><img src="final-images/final_photo.png" class="img-fluid" alt="Final Build Photo"> <em>Figure 7: The completed DDRUM system.</em></p>
+<p><img src="final-images/final-pic-closed.png" class="img-fluid" alt="Final Build Photo"> <em>Figure 7: The completed DDRUM system.</em></p>
 </section>
 <section id="references-acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="references-acknowledgements">7. References &amp; Acknowledgements</h2>
