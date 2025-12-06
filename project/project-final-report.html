@@ -68,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -140,6 +169,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#fpga-design" id="toc-fpga-design" class="nav-link" data-scroll-target="#fpga-design">5. FPGA Design</a>
   <ul class="collapse">
   <li><a href="#rtl-hierarchy" id="toc-rtl-hierarchy" class="nav-link" data-scroll-target="#rtl-hierarchy">RTL Hierarchy</a></li>
+  <li><a href="#verification" id="toc-verification" class="nav-link" data-scroll-target="#verification">Verification</a></li>
   </ul></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">6. Results</a></li>
   <li><a href="#references-acknowledgements" id="toc-references-acknowledgements" class="nav-link" data-scroll-target="#references-acknowledgements">7. References &amp; Acknowledgements</a></li>
@@ -171,7 +201,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="abstract-team" class="level2">
 <h2 class="anchored" data-anchor-id="abstract-team">1. Abstract &amp; Team</h2>
 <p><strong>Team Members:</strong> <strong>Abraham Rock:</strong> An Engineering student at Harvey Mudd College in the Class of 2027. His interests lie in digital electronics, embedded systems, and systems engineering. He is in the ASHMC Executive Board where he acts as this year’s Muddlife Director. - <a href="https://abe-3.github.io/E155-Microprocessors/">Portfolio</a></p>
-<p><strong>Santiago Burgos-Fallon:</strong> A senior Engineering student at Harvey Mudd College. I love everything computers, from digital design and embedded systems to data analysis. This summer I worked at TSMC in Lithography Process Engineering, where I analyzed overlay relationships, tuned control systems, and pushed on design-for-manufacturability to improve chip yield and performance. Ive built practical digital systems including a 16 bit IEEE-754 FMA and a drone navigation project that fuses computer vision with ultra-wideband (UWB) positioning. - <a href="https://s4anti4go.github.io/E155/">Portfolio</a></p>
+<p><strong>Santiago Burgos-Fallon:</strong> A senior Engineering student at Harvey Mudd College. Passionate about everything computers, from digital design and embedded systems to data analysis. This summer he worked at TSMC in Lithography Process Engineering, where he analyzed overlay relationships, tuned control systems, and pushed on design-for-manufacturability to improve chip yield and performance. Additionally he has built practical digital systems including a 16 bit IEEE-754 FMA and a drone navigation project that fuses computer vision with ultra-wideband (UWB) positioning. - <a href="https://s4anti4go.github.io/E155/">Portfolio</a></p>
 <p><strong>Abstract:</strong> DDRUM is an embedded rhythm game system that integrates real-time audio processing, custom hardware inputs, and high-speed visual feedback. The system utilizes an STM32L432KC microcontroller for audio streaming, beat detection, and synchronization, reading uncompressed WAV files from an SD card and buffering them to create a precise “lookahead” mechanic. An iCE40UP5K FPGA acts as a parallel graphics accelerator, driving a 64x64 HUB75 LED matrix with 24-bit color via Binary Code Modulation (BCM) while simultaneously handling input from four custom piezoelectric drum pads with zero-latency debounce logic. By decoupling audio analysis from visual rendering across two distinct processors communicating via SPI, DDRUM achieves fluid, high-refresh rate visuals and accurate rhythm scoring without the overhead of an operating system.</p>
 <p><strong>Project Demonstration:</strong> <iframe width="560" height="315" src="https://www.youtube.com/embed/gT5HPUfdJN4?si=6VV2e-pQJxyKznkK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe></p>
 </section>
@@ -309,18 +339,65 @@ ul.task-list li input[type="checkbox"] {
 <section id="rtl-hierarchy" class="level3">
 <h3 class="anchored" data-anchor-id="rtl-hierarchy">RTL Hierarchy</h3>
 <p><img src="final-images/hierarchy.png" class="img-fluid" alt="Generated Hierarchy"> <em>Figure 5: Generated Hierarchy Diagram with TerosHDL</em></p>
-<p><img src="final-images/block-hierarchy.png" class="img-fluid" alt="SPI FPGA Trace"> <em>Figure 6: SPI transaction sending beat mask from MCU to FPGA.</em></p>
+<p><img src="final-images/bbd.png" class="img-fluid" alt="Block Diagram"> <em>Figure 6: SPI transaction sending beat mask from MCU to FPGA.</em></p>
 <p>The FPGA is an SPI peripheral for the MCU, waiting for chip select to drop so it can shift in a beat byte to interpret which lane it should display on the LED Matrix. To prevent metastability between the crossing clock domains of the SPI Clock and its primitive HFOSC, we have the inputs go through a two-layer shift register to synchronize new beats safely.</p>
 <p>The core gameplay is all contained within the visual driving logic in the pattern_gen module. Each of the 4 lanes is a 64-bit shift register. When a beat arrives from the SPI interface, it simply travels through the shift register at a divided clock’s pace. For controlling all visual things including the “Hit Line,” we can simply check when and where a bit is in the shift register to tell if the hits we detect are “on time”.</p>
 <p>We use our Piezoelectric Disc Transducers as buttons to detect impact from the user. While they inherently aren’t very bouncy like mechanical buttons, putting them in a 3D-Printed Drum Casing added some bounce during testing, so we used a debouncer module to mediate this with a 100ms lockout.</p>
 <p>The most computationally expensive part of this design is driving the HUB75 and using Binary Coded Modulation (BCM). To prevent screen tearing (visual bleeding), we write the game data to a “back buffer” while the hub75_framebuffer module grabs data from the “front buffer” for display. Since the LED panels are purely digital (on/off), the BCM logic rapidly modulates the LEDs—turning them on for short intervals for LSBs and longer intervals for MSBs—to trick the eye into seeing full 24-bit color. Finally, to display the player’s progress, we implemented a font_rom that maps the current score to 5x3 pixel bitmaps, rendering them directly onto the matrix in real-time alongside the falling notes.</p>
 </section>
+<section id="verification" class="level3">
+<h3 class="anchored" data-anchor-id="verification">Verification</h3>
+<p>The modules that we wrote were: top, pattern_gen, font_rom, debouncer, beat_reciever, hit_detector. Testbenches were written to test them individually.</p>
+<section id="debouncer" class="level4">
+<h4 class="anchored" data-anchor-id="debouncer">Debouncer:</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-images/debouncer_waves.png" class="img-fluid figure-img"></p>
+<figcaption>Debouncing Module</figcaption>
+</figure>
+</div>
+</section>
+<section id="pattern-generator" class="level4">
+<h4 class="anchored" data-anchor-id="pattern-generator">Pattern Generator:</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-images/pattern_gen_waves.png" class="img-fluid figure-img"></p>
+<figcaption>Pattern Generator Module</figcaption>
+</figure>
+</div>
+</section>
+<section id="spi-reciever-inst.-as-beat_detector" class="level4">
+<h4 class="anchored" data-anchor-id="spi-reciever-inst.-as-beat_detector">SPI Reciever (inst. as beat_detector):</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-images/spi_receiver_waves.png" class="img-fluid figure-img"></p>
+<figcaption>SPI Module</figcaption>
+</figure>
+</div>
+</section>
+<section id="display-driver" class="level4">
+<h4 class="anchored" data-anchor-id="display-driver">Display Driver:</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-images/dd_waves.png" class="img-fluid figure-img"></p>
+<figcaption>Driver Module</figcaption>
+</figure>
+</div>
+</section>
+<section id="display-memory" class="level4">
+<h4 class="anchored" data-anchor-id="display-memory">Display Memory:</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="final-images/dm_waves.png" class="img-fluid figure-img"></p>
+<figcaption>Memory Module</figcaption>
+</figure>
+</div>
+</section>
+</section>
 </section>
 <section id="results" class="level2">
 <h2 class="anchored" data-anchor-id="results">6. Results</h2>
-<p>The final DDRUM system successfully met the timing and performance benchmarks required for a functional rhythm game. Visually, the HUB75 matrix driver running on the iCE40 FPGA achieved a smooth, tear-free refresh rate using Binary Code Modulation. The dedicated hardware driving logic ensured that note scrolling remained fluid and legible even when multiple lanes were active simultaneously.</p>
-<p>Audio synchronization—the most critical mechanic of the system—was maintained with high precision. The circular buffer implementation in the STM32 firmware provided exactly <strong>2.00 seconds</strong> of lookahead. This specific buffer depth allowed the beat detection algorithm sufficient time to analyze incoming audio sectors and transmit synchronization packets to the FPGA well before the corresponding audio was played through the DAC. This architecture resulted in accurate alignment between the visual “hit line” on the matrix and the audible beat from the speakers.</p>
-<p>To address the mechanical noise inherent to the custom 3D-printed drum pads, input processing was constrained by a hardware debouncer. We forced a <strong>10 ms</strong> debounce window on the piezoelectric signals to prevent the sensor’s “ringing” (mechanical vibration after impact) from registering as multiple hits. By processing these signals directly on the FPGA, we ensured that valid impacts were captured reliability while effectively filtering out noise without the variability of software-based polling.</p>
+<p>The final DDRUM system met all design specifications, achieving fluid integration between the audio subsystem and the custom FPGA graphics accelerator. <strong>Audio Synchronization &amp; Memory Management</strong> The system successfully implemented a 2.00-second lookahead buffer to facilitate beat detection. Given the STM32L432KC’s constraint of 64KB SRAM, we utilized 16 kHz, 8-bit mono audio. This configuration required approximately 44.1 KB of RAM for the 2-second window, leaving adequate headroom for the stack, heap, and file system drivers. The SD card throughput was measured at approximately 200 KB/s, easily sustaining the playback consumption rate of ~16 KB/s and preventing buffer underruns. <strong>Visual Refresh Rates</strong> The iCE40 FPGA successfully drove the HUB75 matrix using Binary Code Modulation (BCM) logic. We achieved a visual refresh rate of &gt;60 Hz with full 24-bit color depth (8 bits per channel). The dedicated hardware SPI interface handled the beat mask transfer with negligible latency (&lt; 1 <span class="math inline">\(\mu\)</span>s), ensuring the visual “hit line” remained perfectly aligned with the audible beat. <strong>Input Latency &amp; Signal Integrity</strong> The piezoelectric analog front-end, combined with the Unity Gain Buffer, successfully clamped input voltages to the safe <em>0V–3.3V</em> logic range. The hardware-based debouncer, tuned to a <em>10 ms</em> lockout window, eliminated mechanical “ringing” from the sensor pads. This resulted in a clean, single trigger event per drum strike, removing false positives while maintaining a responsive feel for the player.</p>
 <p><img src="final-images/final-pic-closed.png" class="img-fluid" alt="Final Build Photo"> <em>Figure 7: The completed DDRUM system.</em></p>
 </section>
 <section id="references-acknowledgements" class="level2">
