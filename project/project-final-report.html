@@ -319,8 +319,8 @@ window.Quarto = {
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: center;"><img src="final-images/LA_FPGA1.png" class="img-fluid" alt="2nd Lane Active"></th>
-<th style="text-align: center;"><img src="final-images/LA_FPGA2.png" class="img-fluid" alt="4th Lane Active"></th>
+<th style="text-align: center;"><img src="final-images/LA_FPGA2.png" class="img-fluid" alt="2nd Lane Active"></th>
+<th style="text-align: center;"><img src="final-images/LA_FPGA1.png" class="img-fluid" alt="4th Lane Active"></th>
 </tr>
 </thead>
 <tbody>
@@ -330,7 +330,7 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p><em>Figure 4: SPI transaction sending beat mask from MCU to FPGA.</em></p>
+<p><em>Figure 4: Logic analyzer trace of SPI transaction sending beat mask from MCU to FPGA.</em></p>
 <p>Finally, for the audio output, we use the DAC driven by a hardware timer (TIM6). We configure the timer to trigger an interrupt at the exact sample rate of the file. On every tick, the handler pulls the “oldest” byte from the tail of our circular buffer and writes it to the DAC output register, ensuring the audio plays smoothly and in perfect sync with the visuals we triggered 2 seconds prior.</p>
 </section>
 <section id="fpga-design" class="level2">
