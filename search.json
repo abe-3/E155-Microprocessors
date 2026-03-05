@@ -137,42 +137,42 @@
     "href": "labs/labs.html#lab-2-multiplexed-7-segment-display",
     "title": "E155 Labs",
     "section": "Lab 2: Multiplexed 7-Segment Display",
-    "text": "Lab 2: Multiplexed 7-Segment Display\nTO-DO"
+    "text": "Lab 2: Multiplexed 7-Segment Display\nIn this lab, expanding on our 7-segment-display knowledge from Lab 1, we controlled a two digit 7-segment-display with the same pins via multiplexing the power pins based on the clock signal. Controlling each segment with independent combinational logic, we toggle between them fast enough to appear as if they are both independently running. Finally, we display the sum of the two numbers displayed on the digits as a binary sum in the form of LEDs."
   },
   {
     "objectID": "labs/labs.html#lab-3-keypad-scanner",
     "href": "labs/labs.html#lab-3-keypad-scanner",
     "title": "E155 Labs",
     "section": "Lab 3: Keypad Scanner",
-    "text": "Lab 3: Keypad Scanner\nTO-DO"
+    "text": "Lab 3: Keypad Scanner\nIn this lab, expanding on our clock multiplexing knowledge from Lab 2, we controlled a two digit 7-segment-display via inputs of a keypad. This 4 x 4 keypad we use has 8 pins for each row and column connection. We display the most recent input on the right digit of the 7-segment-display. On subsequent inputs of the keypad, we should shift the value displayed from the right digit to the left digit of the 7-segment-display and simultaneously update the right digit with the new input of the keypad."
   },
   {
     "objectID": "labs/labs.html#lab-4-digital-audio",
     "href": "labs/labs.html#lab-4-digital-audio",
     "title": "E155 Labs",
     "section": "Lab 4: Digital Audio",
-    "text": "Lab 4: Digital Audio\nTO-DO"
+    "text": "Lab 4: Digital Audio\nIn this lab, we shift away from Hardware Description Language and our FPGA. We begin to make some set-up files for our Microcontroller STM32L432KCUx to access its internal clock, GPIO clocks, and Timer clocks to generate electrical pulses and delays in the form of square waves."
   },
   {
     "objectID": "labs/labs.html#lab-5-interrupts",
     "href": "labs/labs.html#lab-5-interrupts",
     "title": "E155 Labs",
     "section": "Lab 5: Interrupts",
-    "text": "Lab 5: Interrupts\nTO-DO"
+    "text": "Lab 5: Interrupts\nIn this lab, we learn about interrupts, a mechanism to do some action when you detect something. This method compared to polling saves on MCU’s CPU usage, letting the MCU rest or do other tasks and only do the desired action only when needed. We used motor 25GA370 to read out the encoded and waves."
   },
   {
     "objectID": "labs/labs.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-learning",
     "href": "labs/labs.html#lab-6-the-internet-of-things-and-serial-peripheral-interface-learning",
     "title": "E155 Labs",
     "section": "Lab 6: The Internet of Things and Serial Peripheral Interface Learning",
-    "text": "Lab 6: The Internet of Things and Serial Peripheral Interface Learning\nTO-DO"
+    "text": "Lab 6: The Internet of Things and Serial Peripheral Interface Learning\nIn this lab, we learn about one of the most used methods of data communication, Serial Peripheral Interface or SPI. This saves people from making cumbersome circuits and avoid wiring many different signals in parallel. For learning this, we are using the DS1722 Temperature Sensor which communicates some hex value based on the temperature which you can translate to some threshold to find temperature in known units."
   },
   {
     "objectID": "labs/labs.html#lab-7-the-advanced-encryption-standard",
     "href": "labs/labs.html#lab-7-the-advanced-encryption-standard",
     "title": "E155 Labs",
     "section": "Lab 7: The Advanced Encryption Standard",
-    "text": "Lab 7: The Advanced Encryption Standard\nTO-DO"
+    "text": "Lab 7: The Advanced Encryption Standard\nAfter learning SPI Communication in Lab 6, we are returning back to System Verilog and our FPGA to incorporate our new learned skill to have them communicate. Our Microcontroller will act as the host, sending a 128-bit plaintext message and a 128-bit key via SPI. Our FPGA performs a very complex sequence of operations to function as a 128-bit AES encryption hardware accelerator. The FPGA receives the inputs, computes the encryption, and transmits the resulting ciphertext back to the microcontroller for verification."
   },
   {
     "objectID": "labs/lab2/lab2.html",
